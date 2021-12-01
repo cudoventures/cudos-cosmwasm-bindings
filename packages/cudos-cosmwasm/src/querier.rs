@@ -1,8 +1,7 @@
 use cosmwasm_std::{QuerierWrapper, StdResult};
 
-use crate::query::{CudosQuery, CudosQueryWrapper, DenomResponse};
+use crate::query::{CudosQuery, DenomResponse};
 
-/// This is a helper wrapper to easily use our custom queries
 pub struct CudosQuerier<'a> {
     querier: &'a QuerierWrapper<'a>,
 }
@@ -12,11 +11,18 @@ impl<'a> CudosQuerier<'a> {
         CudosQuerier { querier }
     }
 
-    pub fn query_denom<T: Into<String>>(&self, denom_id: T) -> StdResult<DenomResponse> {
-        let request = CudosQueryWrapper {
-            query_data: CudosQuery::Denom {
-                denom_id: denom_id.into(),
-            },
+    pub fn query_denom_by_id<T: Into<String>>(&self, denom_id: T) -> StdResult<DenomResponse> {
+        let request = CudosQuery::QueryDenomById {
+            denom_id: denom_id.into(),
+        }
+        .into();
+
+        self.querier.custom_query(&request)
+    }
+
+    pub fn query_denom_by_name<T: Into<String>>(&self, denom_name: T) -> StdResult<DenomResponse> {
+        let request = CudosQuery::QueryDenomByName {
+            denom_name: denom_name.into(),
         }
         .into();
 

@@ -50,13 +50,23 @@ pub fn execute_msg_issue_denom(
 #[entry_point]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<QueryResponse> {
     match msg {
-        QueryMsg::Denom { denom_id } => to_binary(&query_denom(deps, denom_id)?),
+        QueryMsg::QueryDenomById { denom_id } => to_binary(&query_denom_by_id(deps, denom_id)?),
+        QueryMsg::QueryDenomByName { denom_name } => {
+            to_binary(&query_denom_by_name(deps, denom_name)?)
+        }
     }
 }
 
-pub fn query_denom(deps: Deps, denom_id: String) -> StdResult<DenomResponse> {
+pub fn query_denom_by_id(deps: Deps, denom_id: String) -> StdResult<DenomResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: DenomResponse = querier.query_denom(denom_id)?;
+    let res: DenomResponse = querier.query_denom_by_id(denom_id)?;
+
+    Ok(res)
+}
+
+pub fn query_denom_by_name(deps: Deps, denom_name: String) -> StdResult<DenomResponse> {
+    let querier = CudosQuerier::new(&deps.querier);
+    let res: DenomResponse = querier.query_denom_by_name(denom_name)?;
 
     Ok(res)
 }

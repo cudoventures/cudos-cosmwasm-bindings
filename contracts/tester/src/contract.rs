@@ -4,7 +4,7 @@ use cosmwasm_std::{
 };
 
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
-use cudos_cosmwasm::{create_issue_denom_msg, CudosMsgWrapper, CudosQuerier, DenomResponse};
+use cudos_cosmwasm::{create_issue_denom_msg, CudosMsg, CudosQuerier, DenomResponse};
 
 #[entry_point]
 pub fn instantiate(
@@ -12,7 +12,7 @@ pub fn instantiate(
     _env: Env,
     _info: MessageInfo,
     _msg: InstantiateMsg,
-) -> StdResult<Response<CudosMsgWrapper>> {
+) -> StdResult<Response<CudosMsg>> {
     Ok(Response::new())
 }
 
@@ -22,7 +22,7 @@ pub fn execute(
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
-) -> Result<Response<CudosMsgWrapper>, StdError> {
+) -> Result<Response<CudosMsg>, StdError> {
     match msg {
         ExecuteMsg::IssueDenomMsg {
             id,
@@ -41,7 +41,7 @@ pub fn execute_msg_issue_denom(
     name: String,
     schema: String,
     sender: String,
-) -> StdResult<Response<CudosMsgWrapper>> {
+) -> StdResult<Response<CudosMsg>> {
     let msg = create_issue_denom_msg(id, name, schema, sender);
 
     Ok(Response::new().add_message(msg))

@@ -2,7 +2,7 @@ mod msg;
 mod querier;
 mod query;
 
-pub use msg::{create_issue_denom_msg, CudosMsg, CudosMsgWrapper};
+pub use msg::{create_issue_denom_msg, CudosMsg};
 pub use querier::CudosQuerier;
 pub use query::{CudosQuery, CudosQueryWrapper, Denom, DenomResponse};
 

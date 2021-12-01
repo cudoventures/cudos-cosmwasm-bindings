@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CudosMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "issue_denom"
+      ],
+      "properties": {
+        "issue_denom": {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "schema",
+            "sender"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "schema": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

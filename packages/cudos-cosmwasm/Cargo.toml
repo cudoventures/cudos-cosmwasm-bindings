@@ -1,0 +1,20 @@
+[package]
+name = "cudos-cosmwasm"
+version = "0.0.1"
+authors = []
+edition = "2018"
+description = "Bindings for CosmWasm contracts to call into custom modules of Cudos Node"
+repository = "https://github.com/CudoVentures/cudos-cosmwasm-bindings"
+license = "Apache-2.0"
+readme = "README.md"
+
+[features]
+backtraces = ["cosmwasm-std/backtraces"]
+
+[dependencies]
+cosmwasm-std = "0.16.0"
+schemars = "0.8.1"
+serde = { version = "1.0.103", default-features = false, features = ["derive"] }
+
+[dev-dependencies]
+cosmwasm-schema = "0.16.0"

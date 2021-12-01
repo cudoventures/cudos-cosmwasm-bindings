@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CudosMsgWrapper",
+  "description": "CudosMsgWrapper is an override of CosmosMsg::Custom to show this works and can be extended in the contract",
+  "type": "object",
+  "required": [
+    "msg_data"
+  ],
+  "properties": {
+    "msg_data": {
+      "$ref": "#/definitions/CudosMsg"
+    }
+  },
+  "definitions": {
+    "CudosMsg": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "issue_denom"
+          ],
+          "properties": {
+            "issue_denom": {
+              "type": "object",
+              "required": [
+                "id",
+                "name",
+                "schema",
+                "sender"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "schema": {
+                  "type": "string"
+                },
+                "sender": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

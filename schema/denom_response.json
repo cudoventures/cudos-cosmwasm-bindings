@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DenomResponse",
+  "type": "object",
+  "required": [
+    "denom"
+  ],
+  "properties": {
+    "denom": {
+      "$ref": "#/definitions/Denom"
+    }
+  },
+  "definitions": {
+    "Denom": {
+      "type": "object",
+      "required": [
+        "creator",
+        "id",
+        "name",
+        "schema"
+      ],
+      "properties": {
+        "creator": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

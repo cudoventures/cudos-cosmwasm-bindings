@@ -82,4 +82,18 @@ impl<'a> CudosQuerier<'a> {
 
         self.querier.custom_query(&request)
     }
+
+    pub fn query_approved_addresses<T: Into<String>>(
+        &self,
+        denom_id: T,
+        token_id: T,
+    ) -> StdResult<QueryNFTResponse> {
+        let request = CudosQuery::QueryApprovals {
+            denom_id: denom_id.into(),
+            token_id: token_id.into(),
+        }
+        .into();
+
+        self.querier.custom_query(&request)
+    }
 }

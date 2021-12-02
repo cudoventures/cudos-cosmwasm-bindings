@@ -1,4 +1,4 @@
-use std::{collections::HashMap, str::Bytes};
+use std::collections::HashMap;
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -12,13 +12,45 @@ impl CustomQuery for CudosQuery {}
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum CudosQuery {
-    QueryDenomById { denom_id: String },
-    QueryDenomByName { denom_name: String },
+    QueryDenomById {
+        denom_id: String,
+    },
+    QueryDenomByName {
+        denom_name: String,
+    },
     QueryDenoms {},
-    QueryCollection { denom_id: String },
-    QuerySupply { denom_id: String },
-    QueryCollectionByOwner { denom_id: String, address: String },
-    QueryToken { denom_id: String, token_id: String },
+    QueryCollection {
+        denom_id: String,
+    },
+    QuerySupply {
+        denom_id: String,
+    },
+    QueryCollectionByOwner {
+        denom_id: String,
+        address: String,
+    },
+    QueryToken {
+        denom_id: String,
+        token_id: String,
+    },
+    QueryApprovals {
+        denom_id: String,
+        token_id: String,
+    },
+    QueryApprovedForAll {
+        owner_address: String,
+        operator_address: String,
+    },
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct QueryApprovalsResponse {
+    pub is_approved: bool,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct QueryApprovedForAllResponse {
+    pub approved_addresses: HashMap<String, bool>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

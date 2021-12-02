@@ -79,7 +79,7 @@ You can upload it and interact with it ( and through it - with the cudos chain) 
 
 ```bash
 clonedDir='path/to/the/test/smart/contract/binary'
-cudos-noded tx wasm store $clonedDir/artifacts/alpha.wasm --from=validator-02 --chain-id=cudos-network --gas=auto -y
+cudos-noded tx wasm store $clonedDir/bindings_tester.wasm --from=validator-02 --chain-id=cudos-network --gas=auto -y
 INIT='{}'
 CODE='1' 
 cudos-noded tx wasm instantiate $CODE $INIT --from=validator-02 --label="tester" --chain-id=cudos-network --gas=auto -y
@@ -93,13 +93,12 @@ issueDenomQuery='{
         "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0"
     }
 }'
-# issue a denom
 cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
-# query a denom
 denomQuery='{
     "query_denom_by_id": {
         "denom_id": "testdenom"
     }
 }'
+# query a denom
 cudos-noded query wasm contract-state smart $TESTER $denomQuery --output json
 ```

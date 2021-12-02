@@ -1,7 +1,7 @@
 [package]
 name = "bindings-tester"
-version = "0.0.0"
-authors = []
+version = "0.0.1"
+authors = ["Lyubomir Yonchev <lyubomir.yonchev@limechain.tech>"]
 edition = "2018"
 description = "simple tester for cudos-cosmwasm-bindings"
 license = "Apache-2.0"

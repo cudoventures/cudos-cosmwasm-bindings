@@ -1,6 +1,6 @@
 use cosmwasm_std::{QuerierWrapper, StdResult};
 
-use crate::query::{CudosQuery, DenomResponse};
+use crate::query::{CudosQuery, DenomResponse, QueryNFTResponse};
 
 pub struct CudosQuerier<'a> {
     querier: &'a QuerierWrapper<'a>,
@@ -23,6 +23,20 @@ impl<'a> CudosQuerier<'a> {
     pub fn query_denom_by_name<T: Into<String>>(&self, denom_name: T) -> StdResult<DenomResponse> {
         let request = CudosQuery::QueryDenomByName {
             denom_name: denom_name.into(),
+        }
+        .into();
+
+        self.querier.custom_query(&request)
+    }
+
+    pub fn query_token<T: Into<String>>(
+        &self,
+        denom_id: T,
+        token_id: T,
+    ) -> StdResult<QueryNFTResponse> {
+        let request = CudosQuery::QueryToken {
+            denom_id: denom_id.into(),
+            token_id: token_id.into(),
         }
         .into();
 

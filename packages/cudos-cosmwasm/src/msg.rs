@@ -19,9 +19,23 @@ pub enum CudosMsg {
         schema: String,
         sender: String,
     },
+    MintNft {
+        denom_id: String,
+        name: String,
+        uri: String,
+        data: String,
+        sender: String,
+        recipient: String,
+    },
+    EditNft {
+        denom_id: String,
+        name: String,
+        uri: String,
+        data: String,
+        sender: String,
+    },
 }
 
-// create_issue_denom_msg returns wrapped issue_denom msg
 pub fn create_issue_denom_msg(
     id: String,
     name: String,
@@ -32,6 +46,42 @@ pub fn create_issue_denom_msg(
         id,
         name,
         schema,
+        sender,
+    }
+    .into()
+}
+
+pub fn create_mint_nft_msg(
+    denom_id: String,
+    name: String,
+    uri: String,
+    data: String,
+    sender: String,
+    recipient: String,
+) -> CosmosMsg<CudosMsg> {
+    CudosMsg::MintNft {
+        denom_id,
+        name,
+        uri,
+        data,
+        sender,
+        recipient,
+    }
+    .into()
+}
+
+pub fn create_edit_nft_msg(
+    denom_id: String,
+    name: String,
+    uri: String,
+    data: String,
+    sender: String,
+) -> CosmosMsg<CudosMsg> {
+    CudosMsg::EditNft {
+        denom_id,
+        name,
+        uri,
+        data,
         sender,
     }
     .into()

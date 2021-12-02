@@ -13,6 +13,14 @@ pub enum ExecuteMsg {
         schema: String,
         sender: String,
     },
+    MintNftMsg {
+        denom_id: String,
+        name: String,
+        uri: String,
+        data: String,
+        sender: String,
+        recipient: String,
+    },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -20,4 +28,5 @@ pub enum ExecuteMsg {
 pub enum QueryMsg {
     QueryDenomById { denom_id: String },
     QueryDenomByName { denom_name: String },
+    QueryToken { denom_id: String, token_id: String },
 }

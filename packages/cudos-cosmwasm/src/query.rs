@@ -119,7 +119,7 @@ pub struct NFT {
     pub uri: String,
     pub data: String,
     pub owner: String,
-    pub approved_addresses: HashMap<String, bool>,
+    pub approved_addresses: Option<HashMap<String, bool>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]

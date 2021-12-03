@@ -106,7 +106,7 @@ denomQuery='{
 cudos-noded query wasm contract-state smart $TESTER $denomQuery --output json
 
 # mint a NFT
-mintNftQuery='{
+mintNft='{
     "mint_nft_msg": {
         "denom_id": "testdenom",
         "name": "testtoken",
@@ -116,8 +116,16 @@ mintNftQuery='{
         "recipient": "cudos1f0mwr7cyzzywepx7fremzjgztymmw3892akps8"
     }
 }'
-cudos-noded tx wasm execute $TESTER $mintNftQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $mintNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
 
+# query for a NFT
+nftQuery='{
+    "query_token": {
+        "denom_id": "testdenom",
+        "token_id": "1"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $nftQuery --output json
 ```
 
 # OpKnowen issues:

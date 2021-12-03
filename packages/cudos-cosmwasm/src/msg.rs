@@ -43,13 +43,13 @@ pub enum CudosMsg {
         sender: String,
     },
     BurnNft {
-        token_id: String,
         denom_id: String,
+        token_id: String,
         sender: String,
     },
     ApproveNftRequest {
-        token_id: String,
         denom_id: String,
+        token_id: String,
         approved_address: String,
         sender: String,
     },

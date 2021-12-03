@@ -5,8 +5,9 @@ use cosmwasm_std::{
 
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use cudos_cosmwasm::{
-    create_issue_denom_msg, create_mint_nft_msg, CudosMsg, CudosQuerier, DenomResponse,
-    QueryNFTResponse,
+    create_approve_all_msg, create_approve_nft_msg, create_burn_nft_msg, create_edit_nft_msg,
+    create_issue_denom_msg, create_mint_nft_msg, create_revoke_msg, create_transfer_nft_msg,
+    CudosMsg, CudosQuerier, DenomResponse, QueryNFTResponse,
 };
 
 #[entry_point]
@@ -43,6 +44,59 @@ pub fn execute(
         } => execute_msg_mint_nft(
             deps, env, info, denom_id, name, uri, data, sender, recipient,
         ),
+        ExecuteMsg::EditNft {
+            denom_id,
+            token_id,
+            name,
+            uri,
+            data,
+            sender,
+        } => execute_msg_edit_nft(deps, env, info, denom_id, token_id, name, uri, data, sender),
+        ExecuteMsg::TransferNft {
+            denom_id,
+            token_id,
+            from,
+            to,
+            sender,
+        } => execute_msg_transfer_nft(deps, env, info, denom_id, token_id, from, to, sender),
+        ExecuteMsg::BurnNft {
+            token_id,
+            denom_id,
+            sender,
+        } => execute_msg_burn_nft(deps, env, info, denom_id, token_id, sender),
+        ExecuteMsg::ApproveNftRequest {
+            denom_id,
+            token_id,
+            approved_address,
+            sender,
+        } => execute_msg_approve_nft(
+            deps,
+            env,
+            info,
+            denom_id,
+            token_id,
+            approved_address,
+            sender,
+        ),
+        ExecuteMsg::ApproveAllRequest {
+            approved_operator,
+            approved,
+            sender,
+        } => execute_msg_approve_all(deps, env, info, approved_operator, approved, sender),
+        ExecuteMsg::RevokeApprovalRequest {
+            address_to_revoke,
+            denom_id,
+            token_id,
+            sender,
+        } => execute_msg_revoke_nft(
+            deps,
+            env,
+            info,
+            denom_id,
+            token_id,
+            address_to_revoke,
+            sender,
+        ),
     }
 }
 
@@ -72,6 +126,91 @@ pub fn execute_msg_mint_nft(
     recipient: String,
 ) -> StdResult<Response<CudosMsg>> {
     let msg = create_mint_nft_msg(denom_id, name, uri, data, sender, recipient);
+
+    Ok(Response::new().add_message(msg))
+}
+
+pub fn execute_msg_edit_nft(
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    denom_id: String,
+    token_id: String,
+    name: String,
+    uri: String,
+    data: String,
+    sender: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = create_edit_nft_msg(denom_id, token_id, name, uri, data, sender);
+
+    Ok(Response::new().add_message(msg))
+}
+
+pub fn execute_msg_transfer_nft(
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    denom_id: String,
+    token_id: String,
+    from: String,
+    to: String,
+    sender: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = create_transfer_nft_msg(denom_id, token_id, from, to, sender);
+
+    Ok(Response::new().add_message(msg))
+}
+
+pub fn execute_msg_burn_nft(
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    denom_id: String,
+    token_id: String,
+    sender: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = create_burn_nft_msg(denom_id, token_id, sender);
+
+    Ok(Response::new().add_message(msg))
+}
+
+pub fn execute_msg_approve_nft(
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    denom_id: String,
+    token_id: String,
+    approved_address: String,
+    sender: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = create_approve_nft_msg(denom_id, token_id, approved_address, sender);
+
+    Ok(Response::new().add_message(msg))
+}
+
+pub fn execute_msg_approve_all(
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    approved_operator: String,
+    approved: bool,
+    sender: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = create_approve_all_msg(approved_operator, approved, sender);
+
+    Ok(Response::new().add_message(msg))
+}
+
+pub fn execute_msg_revoke_nft(
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    denom_id: String,
+    token_id: String,
+    address_to_revoke: String,
+    sender: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = create_revoke_msg(denom_id, token_id, address_to_revoke, sender);
 
     Ok(Response::new().add_message(msg))
 }

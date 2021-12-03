@@ -21,6 +21,43 @@ pub enum ExecuteMsg {
         sender: String,
         recipient: String,
     },
+    EditNft {
+        denom_id: String,
+        token_id: String,
+        name: String,
+        uri: String,
+        data: String,
+        sender: String,
+    },
+    TransferNft {
+        denom_id: String,
+        token_id: String,
+        from: String,
+        to: String,
+        sender: String,
+    },
+    BurnNft {
+        denom_id: String,
+        token_id: String,
+        sender: String,
+    },
+    ApproveNftRequest {
+        denom_id: String,
+        token_id: String,
+        approved_address: String,
+        sender: String,
+    },
+    ApproveAllRequest {
+        approved_operator: String,
+        approved: bool,
+        sender: String,
+    },
+    RevokeApprovalRequest {
+        address_to_revoke: String,
+        denom_id: String,
+        token_id: String,
+        sender: String,
+    },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

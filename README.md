@@ -85,6 +85,8 @@ CODE='1'
 cudos-noded tx wasm instantiate $CODE $INIT --from=validator-02 --label="tester" --chain-id=cudos-network --gas=auto -y
 TESTER=$(cudos-noded query wasm list-contract-by-code $CODE --output json | jq -r '.contracts[-1]')
 echo $TESTER
+
+# issueDenom
 issueDenomQuery='{
     "issue_denom_msg": {
         "id": "testdenom",
@@ -94,11 +96,26 @@ issueDenomQuery='{
     }
 }'
 cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+
+# query a denom
 denomQuery='{
     "query_denom_by_id": {
         "denom_id": "testdenom"
     }
 }'
-# query a denom
 cudos-noded query wasm contract-state smart $TESTER $denomQuery --output json
+
+# mint a NFT
+mintNftQuery='{
+    "mint_nft_msg": {
+        "denom_id": "testdenom",
+        "name": "testtoken",
+        "uri": "",
+        "data": "testData",
+        "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0",
+        "recipient": "cudos1f0mwr7cyzzywepx7fremzjgztymmw3892akps8"
+    }
+}'
+cudos-noded tx wasm execute $TESTER $mintNftQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+
 ```

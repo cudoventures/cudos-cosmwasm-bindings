@@ -119,3 +119,10 @@ mintNftQuery='{
 cudos-noded tx wasm execute $TESTER $mintNftQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
 
 ```
+
+# OpKnowen issues:
+When querying for an nft, which has a non-nil ApprovedAddresses(map[string]bool) this is returned:
+```
+Error: rpc error: code = InvalidArgument desc = Error calling the VM: Error executing Wasm: Wasmer runtime error: RuntimeError: unreachable: query wasm contract failed: invalid request
+```
+As from my findings, this is because the wasm module cannot properly serialize map[string]bool for some reason..works correctly if the map is nil..

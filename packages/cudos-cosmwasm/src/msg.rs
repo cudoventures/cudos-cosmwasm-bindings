@@ -18,6 +18,7 @@ pub enum CudosMsg {
         name: String,
         schema: String,
         sender: String,
+        contract_address_signer: String,
     },
     MintNft {
         denom_id: String,
@@ -25,6 +26,7 @@ pub enum CudosMsg {
         uri: String,
         data: String,
         sender: String,
+        contract_address_signer: String,
         recipient: String,
     },
     EditNft {
@@ -34,6 +36,7 @@ pub enum CudosMsg {
         uri: String,
         data: String,
         sender: String,
+        contract_address_signer: String,
     },
     TransferNft {
         denom_id: String,
@@ -41,28 +44,33 @@ pub enum CudosMsg {
         from: String,
         to: String,
         sender: String,
+        contract_address_signer: String,
     },
     BurnNft {
         denom_id: String,
         token_id: String,
         sender: String,
+        contract_address_signer: String,
     },
     ApproveNftRequest {
         denom_id: String,
         token_id: String,
         approved_address: String,
         sender: String,
+        contract_address_signer: String,
     },
     ApproveAllRequest {
         approved_operator: String,
         approved: bool,
         sender: String,
+        contract_address_signer: String,
     },
     RevokeApprovalRequest {
-        address_to_revoke: String,
         denom_id: String,
         token_id: String,
+        address_to_revoke: String,
         sender: String,
+        contract_address_signer: String,
     },
 }
 
@@ -71,12 +79,14 @@ pub fn create_issue_denom_msg(
     name: String,
     schema: String,
     sender: String,
+    contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::IssueDenom {
         id,
         name,
         schema,
         sender,
+        contract_address_signer,
     }
     .into()
 }
@@ -86,8 +96,9 @@ pub fn create_mint_nft_msg(
     name: String,
     uri: String,
     data: String,
-    sender: String,
     recipient: String,
+    sender: String,
+    contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::MintNft {
         denom_id,
@@ -96,6 +107,7 @@ pub fn create_mint_nft_msg(
         data,
         sender,
         recipient,
+        contract_address_signer,
     }
     .into()
 }
@@ -107,6 +119,7 @@ pub fn create_edit_nft_msg(
     uri: String,
     data: String,
     sender: String,
+    contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::EditNft {
         token_id,
@@ -115,6 +128,22 @@ pub fn create_edit_nft_msg(
         uri,
         data,
         sender,
+        contract_address_signer,
+    }
+    .into()
+}
+
+pub fn create_burn_nft_msg(
+    denom_id: String,
+    token_id: String,
+    sender: String,
+    contract_address_signer: String,
+) -> CosmosMsg<CudosMsg> {
+    CudosMsg::BurnNft {
+        token_id,
+        denom_id,
+        sender,
+        contract_address_signer,
     }
     .into()
 }
@@ -125,6 +154,7 @@ pub fn create_transfer_nft_msg(
     from: String,
     to: String,
     sender: String,
+    contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::TransferNft {
         denom_id,
@@ -132,19 +162,7 @@ pub fn create_transfer_nft_msg(
         from,
         to,
         sender,
-    }
-    .into()
-}
-
-pub fn create_burn_nft_msg(
-    denom_id: String,
-    token_id: String,
-    sender: String,
-) -> CosmosMsg<CudosMsg> {
-    CudosMsg::BurnNft {
-        token_id,
-        denom_id,
-        sender,
+        contract_address_signer,
     }
     .into()
 }
@@ -154,12 +172,14 @@ pub fn create_approve_nft_msg(
     token_id: String,
     approved_address: String,
     sender: String,
+    contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::ApproveNftRequest {
         token_id,
         denom_id,
         approved_address,
         sender,
+        contract_address_signer,
     }
     .into()
 }
@@ -168,26 +188,30 @@ pub fn create_approve_all_msg(
     approved_operator: String,
     approved: bool,
     sender: String,
+    contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::ApproveAllRequest {
         approved_operator,
         approved,
         sender,
+        contract_address_signer,
     }
     .into()
 }
 
 pub fn create_revoke_msg(
-    address_to_revoke: String,
     denom_id: String,
     token_id: String,
+    address_to_revoke: String,
     sender: String,
+    contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::RevokeApprovalRequest {
-        address_to_revoke,
         denom_id,
         token_id,
+        address_to_revoke,
         sender,
+        contract_address_signer,
     }
     .into()
 }

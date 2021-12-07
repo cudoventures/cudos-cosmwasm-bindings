@@ -28,189 +28,203 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response<CudosMsg>, StdError> {
     match msg {
-        ExecuteMsg::IssueDenomMsg {
-            id,
-            name,
-            schema,
-            sender,
-        } => execute_msg_issue_denom(deps, env, info, id, name, schema, sender),
+        ExecuteMsg::IssueDenomMsg { id, name, schema } => {
+            execute_msg_issue_denom(deps, env, info, id, name, schema)
+        }
         ExecuteMsg::MintNftMsg {
             denom_id,
             name,
             uri,
             data,
-            sender,
             recipient,
-        } => execute_msg_mint_nft(
-            deps, env, info, denom_id, name, uri, data, sender, recipient,
-        ),
+        } => execute_msg_mint_nft(deps, env, info, denom_id, name, uri, data, recipient),
         ExecuteMsg::EditNft {
             denom_id,
             token_id,
             name,
             uri,
             data,
-            sender,
-        } => execute_msg_edit_nft(deps, env, info, denom_id, token_id, name, uri, data, sender),
+        } => execute_msg_edit_nft(deps, env, info, denom_id, token_id, name, uri, data),
         ExecuteMsg::TransferNft {
             denom_id,
             token_id,
             from,
             to,
-            sender,
-        } => execute_msg_transfer_nft(deps, env, info, denom_id, token_id, from, to, sender),
-        ExecuteMsg::BurnNft {
-            token_id,
-            denom_id,
-            sender,
-        } => execute_msg_burn_nft(deps, env, info, denom_id, token_id, sender),
+        } => execute_msg_transfer_nft(deps, env, info, denom_id, token_id, from, to),
+        ExecuteMsg::BurnNft { token_id, denom_id } => {
+            execute_msg_burn_nft(deps, env, info, denom_id, token_id)
+        }
         ExecuteMsg::ApproveNftRequest {
             denom_id,
             token_id,
             approved_address,
-            sender,
-        } => execute_msg_approve_nft(
-            deps,
-            env,
-            info,
-            denom_id,
-            token_id,
-            approved_address,
-            sender,
-        ),
+        } => execute_msg_approve_nft(deps, env, info, denom_id, token_id, approved_address),
         ExecuteMsg::ApproveAllRequest {
             approved_operator,
             approved,
-            sender,
-        } => execute_msg_approve_all(deps, env, info, approved_operator, approved, sender),
+        } => execute_msg_approve_all(deps, env, info, approved_operator, approved),
         ExecuteMsg::RevokeApprovalRequest {
-            address_to_revoke,
-            denom_id,
-            token_id,
-            sender,
-        } => execute_msg_revoke_nft(
-            deps,
-            env,
-            info,
             denom_id,
             token_id,
             address_to_revoke,
-            sender,
-        ),
+        } => execute_msg_revoke_nft(deps, env, info, denom_id, token_id, address_to_revoke),
     }
 }
 
 pub fn execute_msg_issue_denom(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     id: String,
     name: String,
     schema: String,
-    sender: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_issue_denom_msg(id, name, schema, sender);
+    let msg = create_issue_denom_msg(
+        id,
+        name,
+        schema,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }
 
 pub fn execute_msg_mint_nft(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     denom_id: String,
     name: String,
     uri: String,
     data: String,
-    sender: String,
     recipient: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_mint_nft_msg(denom_id, name, uri, data, sender, recipient);
+    let msg = create_mint_nft_msg(
+        denom_id,
+        name,
+        uri,
+        data,
+        recipient,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }
 
 pub fn execute_msg_edit_nft(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     denom_id: String,
     token_id: String,
     name: String,
     uri: String,
     data: String,
-    sender: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_edit_nft_msg(denom_id, token_id, name, uri, data, sender);
+    let msg = create_edit_nft_msg(
+        denom_id,
+        token_id,
+        name,
+        uri,
+        data,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }
 
 pub fn execute_msg_transfer_nft(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     denom_id: String,
     token_id: String,
     from: String,
     to: String,
-    sender: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_transfer_nft_msg(denom_id, token_id, from, to, sender);
+    let msg = create_transfer_nft_msg(
+        denom_id,
+        token_id,
+        from,
+        to,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }
 
 pub fn execute_msg_burn_nft(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     denom_id: String,
     token_id: String,
-    sender: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_burn_nft_msg(denom_id, token_id, sender);
+    let msg = create_burn_nft_msg(
+        denom_id,
+        token_id,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }
 
 pub fn execute_msg_approve_nft(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     denom_id: String,
     token_id: String,
     approved_address: String,
-    sender: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_approve_nft_msg(denom_id, token_id, approved_address, sender);
+    let msg = create_approve_nft_msg(
+        denom_id,
+        token_id,
+        approved_address,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }
 
 pub fn execute_msg_approve_all(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     approved_operator: String,
     approved: bool,
-    sender: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_approve_all_msg(approved_operator, approved, sender);
+    let msg = create_approve_all_msg(
+        approved_operator,
+        approved,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }
 
 pub fn execute_msg_revoke_nft(
     _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     denom_id: String,
     token_id: String,
     address_to_revoke: String,
-    sender: String,
 ) -> StdResult<Response<CudosMsg>> {
-    let msg = create_revoke_msg(denom_id, token_id, address_to_revoke, sender);
+    let msg = create_revoke_msg(
+        denom_id,
+        token_id,
+        address_to_revoke,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
 
     Ok(Response::new().add_message(msg))
 }

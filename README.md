@@ -86,6 +86,7 @@ cudos-noded tx wasm instantiate $CODE $INIT --from=validator-02 --label="tester"
 TESTER=$(cudos-noded query wasm list-contract-by-code $CODE --output json | jq -r '.contracts[-1]')
 echo $TESTER
 
+# NOTE: sender field in the queries should be the address of your contract, in this case - $TESTER
 # issueDenom
 issueDenomQuery='{
     "issue_denom_msg": {
@@ -126,9 +127,37 @@ nftQuery='{
     }
 }'
 cudos-noded query wasm contract-state smart $TESTER $nftQuery --output json
-```
 
-# OpKnowen issues:
+
+# edit a NFT
+editNft='{
+    "edit_nft": {
+        "denom_id": "testdenom",
+        "token_id": "1",
+        "name": "testtokenChanged",
+        "uri": "",
+        "data": "testData",
+        "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0"
+    }
+}'
+cudos-noded tx wasm execute $TESTER $editNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+
+# transfer a NFT
+transferNft='{
+    "transfer_nft": {
+        "denom_id": "testdenom",
+        "token_id": "1",
+        "from": "",
+        "to": "",
+        "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0"
+    }
+}'
+cudos-noded tx wasm execute $TESTER $editNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+
+# 
+
+```
+# Known issues:
 When querying for an nft, which has a non-nil ApprovedAddresses(map[string]bool) this is returned:
 ```
 Error: rpc error: code = InvalidArgument desc = Error calling the VM: Error executing Wasm: Wasmer runtime error: RuntimeError: unreachable: query wasm contract failed: invalid request

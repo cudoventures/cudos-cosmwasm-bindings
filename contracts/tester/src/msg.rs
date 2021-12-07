@@ -11,14 +11,12 @@ pub enum ExecuteMsg {
         id: String,
         name: String,
         schema: String,
-        sender: String,
     },
     MintNftMsg {
         denom_id: String,
         name: String,
         uri: String,
         data: String,
-        sender: String,
         recipient: String,
     },
     EditNft {
@@ -27,36 +25,30 @@ pub enum ExecuteMsg {
         name: String,
         uri: String,
         data: String,
-        sender: String,
     },
     TransferNft {
         denom_id: String,
         token_id: String,
         from: String,
         to: String,
-        sender: String,
     },
     BurnNft {
         denom_id: String,
         token_id: String,
-        sender: String,
     },
     ApproveNftRequest {
         denom_id: String,
         token_id: String,
         approved_address: String,
-        sender: String,
     },
     ApproveAllRequest {
         approved_operator: String,
         approved: bool,
-        sender: String,
     },
     RevokeApprovalRequest {
-        address_to_revoke: String,
         denom_id: String,
         token_id: String,
-        sender: String,
+        address_to_revoke: String,
     },
 }
 

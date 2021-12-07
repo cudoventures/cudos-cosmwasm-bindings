@@ -163,7 +163,7 @@ cudos-noded tx wasm execute $TESTER $addApprovedAddress --from=validator-02 --ch
 
 # add approve all for an address
 addApproveAll='{
-    "approve_all_nft": {
+    "approve_all_msg": {
         "approved_operator": "",
         "approved": "true"
     }

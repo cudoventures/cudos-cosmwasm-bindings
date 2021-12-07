@@ -19,33 +19,33 @@ pub enum ExecuteMsg {
         data: String,
         recipient: String,
     },
-    EditNft {
+    EditNftMsg {
         denom_id: String,
         token_id: String,
         name: String,
         uri: String,
         data: String,
     },
-    TransferNft {
+    TransferNftMsg {
         denom_id: String,
         token_id: String,
         from: String,
         to: String,
     },
-    BurnNft {
+    BurnNftMsg {
         denom_id: String,
         token_id: String,
     },
-    ApproveNftRequest {
+    ApproveNftMsg {
         denom_id: String,
         token_id: String,
         approved_address: String,
     },
-    ApproveAllRequest {
+    ApproveAllMsg {
         approved_operator: String,
         approved: bool,
     },
-    RevokeApprovalRequest {
+    RevokeApprovalMsg {
         denom_id: String,
         token_id: String,
         address_to_revoke: String,

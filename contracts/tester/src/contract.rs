@@ -38,32 +38,32 @@ pub fn execute(
             data,
             recipient,
         } => execute_msg_mint_nft(deps, env, info, denom_id, name, uri, data, recipient),
-        ExecuteMsg::EditNft {
+        ExecuteMsg::EditNftMsg {
             denom_id,
             token_id,
             name,
             uri,
             data,
         } => execute_msg_edit_nft(deps, env, info, denom_id, token_id, name, uri, data),
-        ExecuteMsg::TransferNft {
+        ExecuteMsg::TransferNftMsg {
             denom_id,
             token_id,
             from,
             to,
         } => execute_msg_transfer_nft(deps, env, info, denom_id, token_id, from, to),
-        ExecuteMsg::BurnNft { token_id, denom_id } => {
+        ExecuteMsg::BurnNftMsg { token_id, denom_id } => {
             execute_msg_burn_nft(deps, env, info, denom_id, token_id)
         }
-        ExecuteMsg::ApproveNftRequest {
+        ExecuteMsg::ApproveNftMsg {
             denom_id,
             token_id,
             approved_address,
         } => execute_msg_approve_nft(deps, env, info, denom_id, token_id, approved_address),
-        ExecuteMsg::ApproveAllRequest {
+        ExecuteMsg::ApproveAllMsg {
             approved_operator,
             approved,
         } => execute_msg_approve_all(deps, env, info, approved_operator, approved),
-        ExecuteMsg::RevokeApprovalRequest {
+        ExecuteMsg::RevokeApprovalMsg {
             denom_id,
             token_id,
             address_to_revoke,

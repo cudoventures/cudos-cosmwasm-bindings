@@ -92,8 +92,7 @@ issueDenomQuery='{
     "issue_denom_msg": {
         "id": "testdenom",
         "name": "TESTDENOM",
-        "schema": "testschema",
-        "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0"
+        "schema": "testschema"
     }
 }'
 cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
@@ -113,7 +112,6 @@ mintNft='{
         "name": "testtoken",
         "uri": "",
         "data": "testData",
-        "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0",
         "recipient": "cudos1f0mwr7cyzzywepx7fremzjgztymmw3892akps8"
     }
 }'
@@ -131,30 +129,65 @@ cudos-noded query wasm contract-state smart $TESTER $nftQuery --output json
 
 # edit a NFT
 editNft='{
-    "edit_nft": {
+    "edit_nft_msg": {
         "denom_id": "testdenom",
         "token_id": "1",
         "name": "testtokenChanged",
         "uri": "",
-        "data": "testData",
-        "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0"
+        "data": "testData"
     }
 }'
 cudos-noded tx wasm execute $TESTER $editNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
 
 # transfer a NFT
+# put the desired addresses in from and to fields in the json below
 transferNft='{
-    "transfer_nft": {
+    "transfer_nft_msg": {
         "denom_id": "testdenom",
         "token_id": "1",
         "from": "",
-        "to": "",
-        "sender": "cudos14hj2tavq8fpesdwxxcu44rty3hh90vhue9cyl0"
+        "to": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $editNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $transferNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
 
-# 
+# add approved address for a NFT
+addApprovedAddress='{
+    "approve_nft_msg": {
+        "denom_id": "testdenom",
+        "token_id": "1",
+        "approved_address": "cudos198vr0hmrakulty97xsaemh83dfzuqk4c4mcjj8"
+    }
+}'
+cudos-noded tx wasm execute $TESTER $addApprovedAddress --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+
+# add approve all for an address
+addApproveAll='{
+    "approve_all_nft": {
+        "approved_operator": "",
+        "approved": "true"
+    }
+}'
+cudos-noded tx wasm execute $TESTER $addApproveAll --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+
+
+# revoke approval for a NFT
+revokeApprovalNFT='{
+    "revoke_approval_msg": {
+        "denom_id": "testdenom",
+        "token_id": "1",
+        "address_to_revoke": ""
+    }
+}'
+cudos-noded tx wasm execute $TESTER $revokeApprovalNFT --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+
+# burn nft
+burnNft='{
+    "burn_nft_msg": {
+        "denom_id": "testdenom",
+        "token_id": "1"
+    }
+}'
 
 ```
 # Known issues:

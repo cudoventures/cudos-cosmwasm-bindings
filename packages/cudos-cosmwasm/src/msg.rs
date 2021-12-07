@@ -13,14 +13,14 @@ impl From<CudosMsg> for CosmosMsg<CudosMsg> {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum CudosMsg {
-    IssueDenom {
+    IssueDenomMsg {
         id: String,
         name: String,
         schema: String,
         sender: String,
         contract_address_signer: String,
     },
-    MintNft {
+    MintNftMsg {
         denom_id: String,
         name: String,
         uri: String,
@@ -29,7 +29,7 @@ pub enum CudosMsg {
         contract_address_signer: String,
         recipient: String,
     },
-    EditNft {
+    EditNftMsg {
         denom_id: String,
         token_id: String,
         name: String,
@@ -38,7 +38,7 @@ pub enum CudosMsg {
         sender: String,
         contract_address_signer: String,
     },
-    TransferNft {
+    TransferNftMsg {
         denom_id: String,
         token_id: String,
         from: String,
@@ -46,26 +46,26 @@ pub enum CudosMsg {
         sender: String,
         contract_address_signer: String,
     },
-    BurnNft {
+    BurnNftMsg {
         denom_id: String,
         token_id: String,
         sender: String,
         contract_address_signer: String,
     },
-    ApproveNftRequest {
+    ApproveNftMsg {
         denom_id: String,
         token_id: String,
         approved_address: String,
         sender: String,
         contract_address_signer: String,
     },
-    ApproveAllRequest {
+    ApproveAllMsg {
         approved_operator: String,
         approved: bool,
         sender: String,
         contract_address_signer: String,
     },
-    RevokeApprovalRequest {
+    RevokeApprovalMsg {
         denom_id: String,
         token_id: String,
         address_to_revoke: String,
@@ -81,7 +81,7 @@ pub fn create_issue_denom_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::IssueDenom {
+    CudosMsg::IssueDenomMsg {
         id,
         name,
         schema,
@@ -100,7 +100,7 @@ pub fn create_mint_nft_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::MintNft {
+    CudosMsg::MintNftMsg {
         denom_id,
         name,
         uri,
@@ -121,7 +121,7 @@ pub fn create_edit_nft_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::EditNft {
+    CudosMsg::EditNftMsg {
         token_id,
         denom_id,
         name,
@@ -139,7 +139,7 @@ pub fn create_burn_nft_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::BurnNft {
+    CudosMsg::BurnNftMsg {
         token_id,
         denom_id,
         sender,
@@ -156,7 +156,7 @@ pub fn create_transfer_nft_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::TransferNft {
+    CudosMsg::TransferNftMsg {
         denom_id,
         token_id,
         from,
@@ -174,7 +174,7 @@ pub fn create_approve_nft_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::ApproveNftRequest {
+    CudosMsg::ApproveNftMsg {
         token_id,
         denom_id,
         approved_address,
@@ -190,7 +190,7 @@ pub fn create_approve_all_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::ApproveAllRequest {
+    CudosMsg::ApproveAllMsg {
         approved_operator,
         approved,
         sender,
@@ -206,7 +206,7 @@ pub fn create_revoke_msg(
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
-    CudosMsg::RevokeApprovalRequest {
+    CudosMsg::RevokeApprovalMsg {
         denom_id,
         token_id,
         address_to_revoke,

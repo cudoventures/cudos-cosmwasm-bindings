@@ -112,7 +112,7 @@ mintNft='{
         "name": "testtoken",
         "uri": "",
         "data": "testData",
-        "recipient": "cudos1f0mwr7cyzzywepx7fremzjgztymmw3892akps8"
+        "recipient": ""
     }
 }'
 cudos-noded tx wasm execute $TESTER $mintNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
@@ -156,7 +156,7 @@ addApprovedAddress='{
     "approve_nft_msg": {
         "denom_id": "testdenom",
         "token_id": "1",
-        "approved_address": "cudos198vr0hmrakulty97xsaemh83dfzuqk4c4mcjj8"
+        "approved_address": ""
     }
 }'
 cudos-noded tx wasm execute $TESTER $addApprovedAddress --from=validator-02 --chain-id=cudos-network --gas=auto -y 
@@ -188,6 +188,9 @@ burnNft='{
         "token_id": "1"
     }
 }'
+
+
+cudos-noded tx wasm execute $TESTER $burnNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
 
 ```
 # Known issues:

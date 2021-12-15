@@ -28,9 +28,12 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response<CudosMsg>, StdError> {
     match msg {
-        ExecuteMsg::IssueDenomMsg { id, name, schema } => {
-            execute_msg_issue_denom(deps, env, info, id, name, schema)
-        }
+        ExecuteMsg::IssueDenomMsg {
+            id,
+            name,
+            symbol,
+            schema,
+        } => execute_msg_issue_denom(deps, env, info, id, name, symbol, schema),
         ExecuteMsg::MintNftMsg {
             denom_id,
             name,
@@ -77,11 +80,13 @@ pub fn execute_msg_issue_denom(
     info: MessageInfo,
     id: String,
     name: String,
+    symbol: String,
     schema: String,
 ) -> StdResult<Response<CudosMsg>> {
     let msg = create_issue_denom_msg(
         id,
         name,
+        symbol,
         schema,
         info.sender.to_string(),
         env.contract.address.to_string(),

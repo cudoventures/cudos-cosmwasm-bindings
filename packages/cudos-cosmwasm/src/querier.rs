@@ -32,6 +32,15 @@ impl<'a> CudosQuerier<'a> {
         self.querier.custom_query(&request)
     }
 
+    pub fn query_denom_by_symbol<T: Into<String>>(&self, symbol: T) -> StdResult<DenomResponse> {
+        let request = CudosQuery::QueryDenomBySymbol {
+            denom_symbol: symbol.into(),
+        }
+        .into();
+
+        self.querier.custom_query(&request)
+    }
+
     pub fn query_all_denoms<T: Into<String>>(&self) -> StdResult<DenomsResponse> {
         let request = CudosQuery::QueryDenoms {}.into();
         self.querier.custom_query(&request)

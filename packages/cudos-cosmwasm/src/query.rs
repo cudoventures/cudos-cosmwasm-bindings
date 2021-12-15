@@ -18,6 +18,9 @@ pub enum CudosQuery {
     QueryDenomByName {
         denom_name: String,
     },
+    QueryDenomBySymbol {
+        denom_symbol: String,
+    },
     QueryDenoms {},
     QueryCollection {
         denom_id: String,

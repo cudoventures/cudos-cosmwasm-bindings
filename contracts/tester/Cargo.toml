@@ -17,7 +17,7 @@ backtraces = ["cosmwasm-std/backtraces"]
 library = []
 
 [dependencies]
-cudos-cosmwasm = { path = "../../packages/cudos-cosmwasm", version = "0.0.1" }
+cudos-cosmwasm = { path = "../../packages/cudos-cosmwasm", version = "0.0.2" }
 cosmwasm-std = { version = "0.16.0" }
 cosmwasm-storage = { version = "0.16.0" }
 schemars = "0.8.1"

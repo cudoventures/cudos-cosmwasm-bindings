@@ -1,6 +1,6 @@
 [package]
 name = "cudos-cosmwasm"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Lyubomir Yonchev <lyubomir.yonchev@limechain.tech>"]
 edition = "2022"
 description = "Bindings for CosmWasm contracts to call into custom modules of Cudos Node"

@@ -8,6 +8,8 @@ license = "Apache-2.0"
 repository = "https://github.com/CudoVentures/cudos-cosmwasm-bindings"
 homepage = "https://www.cudos.org/"
 documentation = "https://docs.cudos.org/"
+readme = "README.md"
+
 
 [lib]
 crate-type = ["cdylib", "rlib"]

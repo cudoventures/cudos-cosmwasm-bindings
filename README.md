@@ -3,7 +3,7 @@
  This crate provides the custom bindings that are used to communicate with the custom modules on the Cudos network from a CosmWasm smart contract.
  Currently only the NFT module bindings are exposed.
 
- # Installation ( TODO - still not published as a crate)
+ # Installation
  Add the crate to your smart contract's' Cargo.toml
  ```toml
 [dependencies]

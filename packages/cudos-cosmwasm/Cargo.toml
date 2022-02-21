@@ -2,7 +2,7 @@
 name = "cudos-cosmwasm"
 version = "0.0.1"
 authors = ["Lyubomir Yonchev <lyubomir.yonchev@limechain.tech>"]
-edition = "2018"
+edition = "2022"
 description = "Bindings for CosmWasm contracts to call into custom modules of Cudos Node"
 repository = "https://github.com/CudoVentures/cudos-cosmwasm-bindings"
 license = "Apache-2.0"

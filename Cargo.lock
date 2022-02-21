@@ -15,7 +15,7 @@ dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
  "cosmwasm-storage",
- "cudos-cosmwasm 0.0.2",
+ "cudos-cosmwasm 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "schemars",
  "serde",
  "snafu",
@@ -146,10 +146,9 @@ dependencies = [
 
 [[package]]
 name = "cudos-cosmwasm"
-version = "0.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "672f80bdbd1538161baceb93fed8bb35dd3bd0c8031f1331a2348758b5745c1b"
+version = "0.0.4"
 dependencies = [
+ "cosmwasm-schema",
  "cosmwasm-std",
  "schemars",
  "serde",
@@ -158,8 +157,9 @@ dependencies = [
 [[package]]
 name = "cudos-cosmwasm"
 version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "536c68a4e14dcc03c2439fa600f5db963b5b08fec8a1d7118fc8dfcbafab1c4f"
 dependencies = [
- "cosmwasm-schema",
  "cosmwasm-std",
  "schemars",
  "serde",

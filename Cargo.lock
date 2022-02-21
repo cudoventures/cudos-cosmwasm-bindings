@@ -157,7 +157,7 @@ dependencies = [
 
 [[package]]
 name = "cudos-cosmwasm"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",

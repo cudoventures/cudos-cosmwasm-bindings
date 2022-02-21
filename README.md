@@ -92,6 +92,7 @@ issueDenomQuery='{
     "issue_denom_msg": {
         "id": "testdenom",
         "name": "TESTDENOM",
+        "name": "testSymbol",
         "schema": "testschema"
     }
 }'

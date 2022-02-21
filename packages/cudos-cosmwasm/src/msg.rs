@@ -16,6 +16,7 @@ pub enum CudosMsg {
     IssueDenomMsg {
         id: String,
         name: String,
+        symbol: String,
         schema: String,
         sender: String,
         contract_address_signer: String,
@@ -77,6 +78,7 @@ pub enum CudosMsg {
 pub fn create_issue_denom_msg(
     id: String,
     name: String,
+    symbol: String,
     schema: String,
     sender: String,
     contract_address_signer: String,
@@ -84,6 +86,7 @@ pub fn create_issue_denom_msg(
     CudosMsg::IssueDenomMsg {
         id,
         name,
+        symbol,
         schema,
         sender,
         contract_address_signer,

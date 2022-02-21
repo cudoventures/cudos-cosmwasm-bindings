@@ -10,6 +10,7 @@ pub enum ExecuteMsg {
     IssueDenomMsg {
         id: String,
         name: String,
+        symbol: String,
         schema: String,
     },
     MintNftMsg {

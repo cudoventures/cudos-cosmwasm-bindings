@@ -24,6 +24,7 @@ You may want your contract to perform messages such as `IssueDenom` and `MintNft
 - `create_mint_nft_msg`
 - `create_edit_nft_msg`
 - `create_transfer_nft_msg`
+- `create_transfer_denom_msg`
 - `create_burn_nft_msg`
 - `create_approve_nft_msg`
 - `create_approve_all_msg`
@@ -79,10 +80,10 @@ You can upload it and interact with it ( and through it - with the cudos chain) 
 
 ```bash
 clonedDir='path/to/the/test/smart/contract/binary'
-cudos-noded tx wasm store $clonedDir/bindings_tester.wasm --from=validator-02 --chain-id=cudos-network --gas=auto -y
+cudos-noded tx wasm store $clonedDir/bindings_tester.wasm --from=<address> --chain-id=cudos-network --gas=auto -y
 INIT='{}'
 CODE='1' 
-cudos-noded tx wasm instantiate $CODE $INIT --from=validator-02 --label="tester" --chain-id=cudos-network --gas=auto -y
+cudos-noded tx wasm instantiate $CODE $INIT --from=<address> --label="tester" --chain-id=cudos-network --gas=auto -y
 TESTER=$(cudos-noded query wasm list-contract-by-code $CODE --output json | jq -r '.contracts[-1]')
 echo $TESTER
 
@@ -96,7 +97,7 @@ issueDenomQuery='{
         "schema": "testschema"
     }
 }'
-cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 # query a denom
 denomQuery='{
@@ -116,7 +117,7 @@ mintNft='{
         "recipient": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $mintNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $mintNft --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 # query for a NFT
 nftQuery='{
@@ -138,7 +139,7 @@ editNft='{
         "data": "testData"
     }
 }'
-cudos-noded tx wasm execute $TESTER $editNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $editNft --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 # transfer a NFT
 # put the desired addresses in from and to fields in the json below
@@ -150,7 +151,17 @@ transferNft='{
         "to": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $transferNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $transferNft --from=<address> --chain-id=cudos-network --gas=auto -y 
+
+# transfer a NFT collection
+# put the desired recipient adress in to field in the json below
+transferDenom='{
+    "transfer_denom_msg": {
+        "denom_id": "testdenom",
+        "to": ""
+    }
+}'
+cudos-noded tx wasm execute $TESTER $transferDenom --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 # add approved address for a NFT
 addApprovedAddress='{
@@ -160,7 +171,7 @@ addApprovedAddress='{
         "approved_address": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $addApprovedAddress --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $addApprovedAddress --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 # add approve all for an address
 addApproveAll='{
@@ -169,7 +180,7 @@ addApproveAll='{
         "approved": "true"
     }
 }'
-cudos-noded tx wasm execute $TESTER $addApproveAll --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $addApproveAll --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 
 # revoke approval for a NFT
@@ -180,7 +191,7 @@ revokeApprovalNFT='{
         "address_to_revoke": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $revokeApprovalNFT --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $revokeNFT --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 # burn nft
 burnNft='{
@@ -191,7 +202,7 @@ burnNft='{
 }'
 
 
-cudos-noded tx wasm execute $TESTER $burnNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $burnNft --from=<address> --chain-id=cudos-network --gas=auto -y 
 
 ```
 # Known issues:

@@ -33,6 +33,10 @@ pub enum ExecuteMsg {
         from: String,
         to: String,
     },
+    TransferDenomMsg {
+        denom_id: String,
+        to: String,
+    },
     BurnNftMsg {
         denom_id: String,
         token_id: String,

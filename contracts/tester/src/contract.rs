@@ -7,6 +7,7 @@ use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use cudos_cosmwasm::{
     create_approve_all_msg, create_approve_nft_msg, create_burn_nft_msg, create_edit_nft_msg,
     create_issue_denom_msg, create_mint_nft_msg, create_revoke_msg, create_transfer_nft_msg,
+    create_transfer_denom_msg,
     CudosMsg, CudosQuerier, DenomResponse, QueryNFTResponse,
 };
 
@@ -54,6 +55,10 @@ pub fn execute(
             from,
             to,
         } => execute_msg_transfer_nft(deps, env, info, denom_id, token_id, from, to),
+        ExecuteMsg::TransferDenomMsg {
+            denom_id,
+            to,
+        } => execute_msg_transfer_denom(deps, env, info, denom_id, to),
         ExecuteMsg::BurnNftMsg { token_id, denom_id } => {
             execute_msg_burn_nft(deps, env, info, denom_id, token_id)
         }
@@ -154,6 +159,23 @@ pub fn execute_msg_transfer_nft(
         denom_id,
         token_id,
         from,
+        to,
+        info.sender.to_string(),
+        env.contract.address.to_string(),
+    );
+
+    Ok(Response::new().add_message(msg))
+}
+
+pub fn execute_msg_transfer_denom(
+    _deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    denom_id: String,
+    to: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = create_transfer_denom_msg(
+        denom_id,
         to,
         info.sender.to_string(),
         env.contract.address.to_string(),

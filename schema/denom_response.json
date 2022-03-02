@@ -16,8 +16,7 @@
       "required": [
         "creator",
         "id",
-        "name",
-        "schema"
+        "name"
       ],
       "properties": {
         "creator": {
@@ -30,7 +29,10 @@
           "type": "string"
         },
         "schema": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     }

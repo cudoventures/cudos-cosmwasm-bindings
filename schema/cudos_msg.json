@@ -5,18 +5,22 @@
     {
       "type": "object",
       "required": [
-        "issue_denom"
+        "issue_denom_msg"
       ],
       "properties": {
-        "issue_denom": {
+        "issue_denom_msg": {
           "type": "object",
           "required": [
+            "contract_address_signer",
             "id",
             "name",
-            "schema",
-            "sender"
+            "sender",
+            "symbol"
           ],
           "properties": {
+            "contract_address_signer": {
+              "type": "string"
+            },
             "id": {
               "type": "string"
             },
@@ -24,9 +28,323 @@
               "type": "string"
             },
             "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sender": {
+              "type": "string"
+            },
+            "symbol": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "mint_nft_msg"
+      ],
+      "properties": {
+        "mint_nft_msg": {
+          "type": "object",
+          "required": [
+            "contract_address_signer",
+            "denom_id",
+            "recipient",
+            "sender"
+          ],
+          "properties": {
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "data": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "denom_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "recipient": {
               "type": "string"
             },
             "sender": {
+              "type": "string"
+            },
+            "uri": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "edit_nft_msg"
+      ],
+      "properties": {
+        "edit_nft_msg": {
+          "type": "object",
+          "required": [
+            "contract_address_signer",
+            "denom_id",
+            "sender",
+            "token_id"
+          ],
+          "properties": {
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "data": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "denom_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sender": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            },
+            "uri": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "transfer_nft_msg"
+      ],
+      "properties": {
+        "transfer_nft_msg": {
+          "type": "object",
+          "required": [
+            "contract_address_signer",
+            "denom_id",
+            "from",
+            "sender",
+            "to",
+            "token_id"
+          ],
+          "properties": {
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "denom_id": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "transfer_denom_msg"
+      ],
+      "properties": {
+        "transfer_denom_msg": {
+          "type": "object",
+          "required": [
+            "contract_address_signer",
+            "denom_id",
+            "sender",
+            "to"
+          ],
+          "properties": {
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "denom_id": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "burn_nft_msg"
+      ],
+      "properties": {
+        "burn_nft_msg": {
+          "type": "object",
+          "required": [
+            "contract_address_signer",
+            "denom_id",
+            "sender",
+            "token_id"
+          ],
+          "properties": {
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "denom_id": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "approve_nft_msg"
+      ],
+      "properties": {
+        "approve_nft_msg": {
+          "type": "object",
+          "required": [
+            "approved_address",
+            "contract_address_signer",
+            "denom_id",
+            "sender",
+            "token_id"
+          ],
+          "properties": {
+            "approved_address": {
+              "type": "string"
+            },
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "denom_id": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "approve_all_msg"
+      ],
+      "properties": {
+        "approve_all_msg": {
+          "type": "object",
+          "required": [
+            "approved",
+            "approved_operator",
+            "contract_address_signer",
+            "sender"
+          ],
+          "properties": {
+            "approved": {
+              "type": "boolean"
+            },
+            "approved_operator": {
+              "type": "string"
+            },
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "revoke_approval_msg"
+      ],
+      "properties": {
+        "revoke_approval_msg": {
+          "type": "object",
+          "required": [
+            "address_to_revoke",
+            "contract_address_signer",
+            "denom_id",
+            "sender",
+            "token_id"
+          ],
+          "properties": {
+            "address_to_revoke": {
+              "type": "string"
+            },
+            "contract_address_signer": {
+              "type": "string"
+            },
+            "denom_id": {
+              "type": "string"
+            },
+            "sender": {
+              "type": "string"
+            },
+            "token_id": {
               "type": "string"
             }
           }

@@ -6,16 +6,206 @@
     {
       "type": "object",
       "required": [
-        "denom"
+        "query_denom_by_id"
       ],
       "properties": {
-        "denom": {
+        "query_denom_by_id": {
           "type": "object",
           "required": [
             "denom_id"
           ],
           "properties": {
             "denom_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_denom_by_name"
+      ],
+      "properties": {
+        "query_denom_by_name": {
+          "type": "object",
+          "required": [
+            "denom_name"
+          ],
+          "properties": {
+            "denom_name": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_denom_by_symbol"
+      ],
+      "properties": {
+        "query_denom_by_symbol": {
+          "type": "object",
+          "required": [
+            "denom_symbol"
+          ],
+          "properties": {
+            "denom_symbol": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_denoms"
+      ],
+      "properties": {
+        "query_denoms": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_collection"
+      ],
+      "properties": {
+        "query_collection": {
+          "type": "object",
+          "required": [
+            "denom_id"
+          ],
+          "properties": {
+            "denom_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_supply"
+      ],
+      "properties": {
+        "query_supply": {
+          "type": "object",
+          "required": [
+            "denom_id"
+          ],
+          "properties": {
+            "denom_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_owner"
+      ],
+      "properties": {
+        "query_owner": {
+          "type": "object",
+          "required": [
+            "address"
+          ],
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "denom_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_token"
+      ],
+      "properties": {
+        "query_token": {
+          "type": "object",
+          "required": [
+            "denom_id",
+            "token_id"
+          ],
+          "properties": {
+            "denom_id": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_approvals"
+      ],
+      "properties": {
+        "query_approvals": {
+          "type": "object",
+          "required": [
+            "denom_id",
+            "token_id"
+          ],
+          "properties": {
+            "denom_id": {
+              "type": "string"
+            },
+            "token_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "query_approved_for_all"
+      ],
+      "properties": {
+        "query_approved_for_all": {
+          "type": "object",
+          "required": [
+            "operator_address",
+            "owner_address"
+          ],
+          "properties": {
+            "operator_address": {
+              "type": "string"
+            },
+            "owner_address": {
               "type": "string"
             }
           }

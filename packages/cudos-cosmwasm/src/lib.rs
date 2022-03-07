@@ -4,7 +4,8 @@ mod query;
 
 pub use msg::{
     create_approve_all_msg, create_approve_nft_msg, create_burn_nft_msg, create_edit_nft_msg,
-    create_issue_denom_msg, create_mint_nft_msg, create_revoke_msg, create_transfer_nft_msg,
+    create_issue_denom_msg, create_mint_nft_msg, create_revoke_msg, create_transfer_nft_msg, 
+    create_transfer_denom_msg,
     CudosMsg,
 };
 pub use querier::CudosQuerier;

@@ -15,5 +15,4 @@ artifacts/
 
 # Auto-gen
 .cargo-ok
-cudos-data/config/app.toml
-cudos-data/config/config.toml
+cudos-data/

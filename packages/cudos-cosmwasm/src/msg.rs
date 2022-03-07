@@ -17,15 +17,15 @@ pub enum CudosMsg {
         id: String,
         name: String,
         symbol: String,
-        schema: String,
+        schema: Option<String>,
         sender: String,
         contract_address_signer: String,
     },
     MintNftMsg {
         denom_id: String,
         name: String,
-        uri: String,
-        data: String,
+        uri: Option<String>,
+        data: Option<String>,
         sender: String,
         contract_address_signer: String,
         recipient: String,
@@ -33,9 +33,9 @@ pub enum CudosMsg {
     EditNftMsg {
         denom_id: String,
         token_id: String,
-        name: String,
-        uri: String,
-        data: String,
+        name: Option<String>,
+        uri: Option<String>,
+        data: Option<String>,
         sender: String,
         contract_address_signer: String,
     },
@@ -43,6 +43,12 @@ pub enum CudosMsg {
         denom_id: String,
         token_id: String,
         from: String,
+        to: String,
+        sender: String,
+        contract_address_signer: String,
+    },
+    TransferDenomMsg {
+        denom_id: String,
         to: String,
         sender: String,
         contract_address_signer: String,
@@ -79,7 +85,7 @@ pub fn create_issue_denom_msg(
     id: String,
     name: String,
     symbol: String,
-    schema: String,
+    schema: Option<String>,
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
@@ -97,8 +103,8 @@ pub fn create_issue_denom_msg(
 pub fn create_mint_nft_msg(
     denom_id: String,
     name: String,
-    uri: String,
-    data: String,
+    uri: Option<String>,
+    data: Option<String>,
     recipient: String,
     sender: String,
     contract_address_signer: String,
@@ -118,9 +124,9 @@ pub fn create_mint_nft_msg(
 pub fn create_edit_nft_msg(
     denom_id: String,
     token_id: String,
-    name: String,
-    uri: String,
-    data: String,
+    name: Option<String>,
+    uri: Option<String>,
+    data: Option<String>,
     sender: String,
     contract_address_signer: String,
 ) -> CosmosMsg<CudosMsg> {
@@ -163,6 +169,21 @@ pub fn create_transfer_nft_msg(
         denom_id,
         token_id,
         from,
+        to,
+        sender,
+        contract_address_signer,
+    }
+    .into()
+}
+
+pub fn create_transfer_denom_msg(
+    denom_id: String,
+    to: String,
+    sender: String,
+    contract_address_signer: String,
+) -> CosmosMsg<CudosMsg> {
+    CudosMsg::TransferDenomMsg {
+        denom_id,
         to,
         sender,
         contract_address_signer,

@@ -24,6 +24,7 @@ You may want your contract to perform messages such as `IssueDenom` and `MintNft
 - `create_mint_nft_msg`
 - `create_edit_nft_msg`
 - `create_transfer_nft_msg`
+- `create_transfer_denom_msg`
 - `create_burn_nft_msg`
 - `create_approve_nft_msg`
 - `create_approve_all_msg`
@@ -79,66 +80,51 @@ You can upload it and interact with it ( and through it - with the cudos chain) 
 
 ```bash
 clonedDir='path/to/the/test/smart/contract/binary'
-cudos-noded tx wasm store $clonedDir/bindings_tester.wasm --from=validator-02 --chain-id=cudos-network --gas=auto -y
+cudos-noded tx wasm store $clonedDir/bindings_tester.wasm --from=<address> --chain-id=<chain-id> --gas=auto -y
 INIT='{}'
 CODE='1' 
-cudos-noded tx wasm instantiate $CODE $INIT --from=validator-02 --label="tester" --chain-id=cudos-network --gas=auto -y
+cudos-noded tx wasm instantiate $CODE $INIT --from=<address> --label="tester" --chain-id=<chain-id> --gas=auto -y
 TESTER=$(cudos-noded query wasm list-contract-by-code $CODE --output json | jq -r '.contracts[-1]')
 echo $TESTER
 
 # NOTE: sender field in the queries should be the address of your contract, in this case - $TESTER
 # issueDenom
+# NOTE: schema is optional field
 issueDenomQuery='{
     "issue_denom_msg": {
         "id": "testdenom",
         "name": "TESTDENOM",
-        "name": "testSymbol",
+        "symbol": "testSymbol",
         "schema": "testschema"
     }
 }'
-cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
-# query a denom
-denomQuery='{
-    "query_denom_by_id": {
-        "denom_id": "testdenom"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $denomQuery --output json
 
 # mint a NFT
+# put the desired recipient address in the json below. Only denom_id, name and recipient are mandatory fields.
 mintNft='{
     "mint_nft_msg": {
         "denom_id": "testdenom",
-        "name": "testtoken",
+        "name": "",
         "uri": "",
-        "data": "testData",
+        "data": "",
         "recipient": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $mintNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
-
-# query for a NFT
-nftQuery='{
-    "query_token": {
-        "denom_id": "testdenom",
-        "token_id": "1"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $nftQuery --output json
-
+cudos-noded tx wasm execute $TESTER $mintNft --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
 # edit a NFT
+# NOTE: only denomId and tokenId are mandatory. You can provide some or all of the other optional fields
 editNft='{
     "edit_nft_msg": {
         "denom_id": "testdenom",
         "token_id": "1",
-        "name": "testtokenChanged",
-        "uri": "",
-        "data": "testData"
+        "name": "",
+        "uri": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $editNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $editNft --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
 # transfer a NFT
 # put the desired addresses in from and to fields in the json below
@@ -150,7 +136,17 @@ transferNft='{
         "to": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $transferNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $transferNft --from=<address> --chain-id=<chain-id> --gas=auto -y 
+
+# transfer a NFT collection
+# put the desired recipient adress in to field in the json below
+transferDenom='{
+    "transfer_denom_msg": {
+        "denom_id": "testdenom",
+        "to": ""
+    }
+}'
+cudos-noded tx wasm execute $TESTER $transferDenom --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
 # add approved address for a NFT
 addApprovedAddress='{
@@ -160,16 +156,16 @@ addApprovedAddress='{
         "approved_address": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $addApprovedAddress --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $addApprovedAddress --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
-# add approve all for an address
+# add approve all for an address. PLEASE NOTE the lack of quotes around the boolean.
 addApproveAll='{
     "approve_all_msg": {
         "approved_operator": "",
-        "approved": "true"
+        "approved": true
     }
 }'
-cudos-noded tx wasm execute $TESTER $addApproveAll --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $addApproveAll --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
 
 # revoke approval for a NFT
@@ -180,7 +176,7 @@ revokeApprovalNFT='{
         "address_to_revoke": ""
     }
 }'
-cudos-noded tx wasm execute $TESTER $revokeApprovalNFT --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $revokeNFT --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
 # burn nft
 burnNft='{
@@ -191,12 +187,87 @@ burnNft='{
 }'
 
 
-cudos-noded tx wasm execute $TESTER $burnNft --from=validator-02 --chain-id=cudos-network --gas=auto -y 
+cudos-noded tx wasm execute $TESTER $burnNft --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
-```
-# Known issues:
-When querying for an nft, which has a non-nil ApprovedAddresses(map[string]bool) this is returned:
-```
-Error: rpc error: code = InvalidArgument desc = Error calling the VM: Error executing Wasm: Wasmer runtime error: RuntimeError: unreachable: query wasm contract failed: invalid request
-```
-As from my findings, this is because the wasm module cannot properly serialize map[string]bool for some reason..works correctly if the map is nil..
+# query a denom by ID
+denomByIdQuery='{
+    "query_denom_by_id": {
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomByIdQuery --output json
+
+# query a denom by Name
+denomByNameQuery='{
+    "query_denom_by_name": {
+        "denom_name": "TESTDENOM"               
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomByNameQuery --output json
+
+# query a denom by Symbol
+denomBySymbolQuery='{
+    "query_denom_by_symbol": {
+        "denom_symbol": "testSymbol"               
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomBySymbolQuery --output json
+
+# query all denoms
+denomsQuery='{
+    "query_denoms": {}
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomsQuery --output json
+
+# query all NFTs related with a given denom
+collectionQuery='{
+    "query_collection": {
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $collectionQuery --output json
+
+# query the total count of minted NFTs from a given denom
+supplyQuery='{
+    "query_supply": {
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $supplyQuery --output json
+
+# query the NFTs owned by the given address from the given denom
+# denom_id is mandatory field. If not provided, returns all NFTs from all denoms owned by the address
+ownerQuery='{
+    "query_owner": {
+        "address": "",
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $ownerQuery --output json
+
+# query for a NFT
+nftQuery='{
+    "query_token": {
+        "denom_id": "testdenom",
+        "token_id": "1"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $nftQuery --output json
+
+# query for the approved addresses associated with the given token of the denom
+approvalsQuery='{
+    "query_approvals": {
+        "denom_id": "testdenom",
+        "token_id": "1"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $approvalsQuery --output json
+
+# Query if an address is an authorized operator for another address
+approvedForAllQuery='{
+    "query_approved_for_all": {
+        "owner_address": "",
+        "operator_address": ""
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $approvedForAllQuery --output json

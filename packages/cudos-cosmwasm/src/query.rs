@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -28,8 +26,8 @@ pub enum CudosQuery {
     QuerySupply {
         denom_id: String,
     },
-    QueryCollectionByOwner {
-        denom_id: String,
+    QueryOwner {
+        denom_id: Option<String>,
         address: String,
     },
     QueryToken {
@@ -48,12 +46,12 @@ pub enum CudosQuery {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct QueryApprovalsResponse {
-    pub is_approved: bool,
+    pub approved_addresses: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct QueryApprovedForAllResponse {
-    pub approved_addresses: HashMap<String, bool>,
+    pub is_approved: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -94,7 +92,7 @@ pub struct DenomsResponse {
 pub struct Denom {
     pub id: String,
     pub name: String,
-    pub schema: String,
+    pub schema: Option<String>,
     pub creator: String,
 }
 
@@ -118,11 +116,11 @@ pub struct Collection {
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct NFT {
     pub id: String,
-    pub name: String,
-    pub uri: String,
-    pub data: String,
+    pub name: Option<String>,
+    pub uri: Option<String>,
+    pub data: Option<String>,
     pub owner: String,
-    pub approved_addresses: Option<HashMap<String, bool>>,
+    pub approved_addresses: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]

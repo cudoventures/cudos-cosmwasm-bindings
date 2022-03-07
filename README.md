@@ -184,7 +184,7 @@ approvedForAllQuery='{
 cudos-noded query wasm contract-state smart $TESTER $approvedForAllQuery --output json
 
 # mint a NFT
-# put the desired recipient address in the json below. Only denom_id and recipient are mandatory fields.
+# put the desired recipient address in the json below. Only denom_id, name and recipient are mandatory fields.
 mintNft='{
     "mint_nft_msg": {
         "denom_id": "testdenom",

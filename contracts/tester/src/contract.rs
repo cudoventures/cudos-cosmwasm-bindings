@@ -106,7 +106,7 @@ pub fn execute_msg_mint_nft(
     env: Env,
     info: MessageInfo,
     denom_id: String,
-    name: Option<String>,
+    name: String,
     uri: Option<String>,
     data: Option<String>,
     recipient: String,

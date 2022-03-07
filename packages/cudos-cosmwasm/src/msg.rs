@@ -23,7 +23,7 @@ pub enum CudosMsg {
     },
     MintNftMsg {
         denom_id: String,
-        name: Option<String>,
+        name: String,
         uri: Option<String>,
         data: Option<String>,
         sender: String,
@@ -102,7 +102,7 @@ pub fn create_issue_denom_msg(
 
 pub fn create_mint_nft_msg(
     denom_id: String,
-    name: Option<String>,
+    name: String,
     uri: Option<String>,
     data: Option<String>,
     recipient: String,

@@ -15,7 +15,7 @@ pub enum ExecuteMsg {
     },
     MintNftMsg {
         denom_id: String,
-        name: Option<String>,
+        name: String,
         uri: Option<String>,
         data: Option<String>,
         recipient: String,

@@ -100,88 +100,6 @@ issueDenomQuery='{
 }'
 cudos-noded tx wasm execute $TESTER $issueDenomQuery --from=<address> --chain-id=<chain-id> --gas=auto -y 
 
-# query a denom by ID
-denomByIdQuery='{
-    "query_denom_by_id": {
-        "denom_id": "testdenom"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $denomByIdQuery --output json
-
-# query a denom by Name
-denomByNameQuery='{
-    "query_denom_by_name": {
-        "denom_name": "TESTDENOM"               
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $denomByNameQuery --output json
-
-# query a denom by Symbol
-denomBySymbolQuery='{
-    "query_denom_by_symbol": {
-        "denom_symbol": "testSymbol"               
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $denomBySymbolQuery --output json
-
-# query all denoms
-denomsQuery='{
-    "query_denoms": {}
-}'
-cudos-noded query wasm contract-state smart $TESTER $denomsQuery --output json
-
-# query all NFTs related with a given denom
-collectionQuery='{
-    "query_collection": {
-        "denom_id": "testdenom"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $collectionQuery --output json
-
-# query the total count of minted NFTs from a given denom
-supplyQuery='{
-    "query_supply": {
-        "denom_id": "testdenom"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $supplyQuery --output json
-
-# query the NFTs owned by the given address from the given denom
-# denom_id is mandatory field. If not provided, returns all NFTs from all denoms owned by the address
-ownerQuery='{
-    "query_owner": {
-        "address": "",
-        "denom_id": "testdenom"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $ownerQuery --output json
-
-# query for a NFT
-nftQuery='{
-    "query_token": {
-        "denom_id": "testdenom",
-        "token_id": "1"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $nftQuery --output json
-
-# query for the approved addresses associated with the given token of the denom
-approvalsQuery='{
-    "query_approvals": {
-        "denom_id": "testdenom",
-        "token_id": "1"
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $approvalsQuery --output json
-
-# Query if an address is an authorized operator for another address
-approvedForAllQuery='{
-    "query_approved_for_all": {
-        "owner_address": "",
-        "operator_address": ""
-    }
-}'
-cudos-noded query wasm contract-state smart $TESTER $approvedForAllQuery --output json
 
 # mint a NFT
 # put the desired recipient address in the json below. Only denom_id, name and recipient are mandatory fields.
@@ -270,3 +188,86 @@ burnNft='{
 
 
 cudos-noded tx wasm execute $TESTER $burnNft --from=<address> --chain-id=<chain-id> --gas=auto -y 
+
+# query a denom by ID
+denomByIdQuery='{
+    "query_denom_by_id": {
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomByIdQuery --output json
+
+# query a denom by Name
+denomByNameQuery='{
+    "query_denom_by_name": {
+        "denom_name": "TESTDENOM"               
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomByNameQuery --output json
+
+# query a denom by Symbol
+denomBySymbolQuery='{
+    "query_denom_by_symbol": {
+        "denom_symbol": "testSymbol"               
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomBySymbolQuery --output json
+
+# query all denoms
+denomsQuery='{
+    "query_denoms": {}
+}'
+cudos-noded query wasm contract-state smart $TESTER $denomsQuery --output json
+
+# query all NFTs related with a given denom
+collectionQuery='{
+    "query_collection": {
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $collectionQuery --output json
+
+# query the total count of minted NFTs from a given denom
+supplyQuery='{
+    "query_supply": {
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $supplyQuery --output json
+
+# query the NFTs owned by the given address from the given denom
+# denom_id is mandatory field. If not provided, returns all NFTs from all denoms owned by the address
+ownerQuery='{
+    "query_owner": {
+        "address": "",
+        "denom_id": "testdenom"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $ownerQuery --output json
+
+# query for a NFT
+nftQuery='{
+    "query_token": {
+        "denom_id": "testdenom",
+        "token_id": "1"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $nftQuery --output json
+
+# query for the approved addresses associated with the given token of the denom
+approvalsQuery='{
+    "query_approvals": {
+        "denom_id": "testdenom",
+        "token_id": "1"
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $approvalsQuery --output json
+
+# Query if an address is an authorized operator for another address
+approvedForAllQuery='{
+    "query_approved_for_all": {
+        "owner_address": "",
+        "operator_address": ""
+    }
+}'
+cudos-noded query wasm contract-state smart $TESTER $approvedForAllQuery --output json

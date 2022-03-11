@@ -1,0 +1,9 @@
+{
+    "mint_nft_msg": {
+        "denom_id": "testdenom",
+        "name": "initial name",
+        "uri": "initial url",
+        "data": "",
+        "recipient": ""
+    }
+}

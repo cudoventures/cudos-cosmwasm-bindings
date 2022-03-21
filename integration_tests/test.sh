@@ -1,5 +1,6 @@
 CHAIN_ID=$1 # cudos-network
 CONTRACT_PATH=$2
+CUDOS_NODED_RUNNING_INSTANCE_PATH=$3
 
 alias CUDOS_NODED='cudos-noded'
 
@@ -20,6 +21,10 @@ read_json() {
     data=$(trim_json "$data")
     echo "$data"
 }
+
+TEST_DIR=$PWD
+
+cd $CUDOS_NODED_RUNNING_INSTANCE_PATH
 
 # CREATE USERS
 echo "CREATE USERS"
@@ -58,12 +63,12 @@ fi
 
 # ISSUE DENOM
 echo "ISSUE DENOM"
-ISSUE_DENOM_MSG=$(read_json './cosmwasm-testing/msgs/issue_denom_msg.json')
+ISSUE_DENOM_MSG=$(read_json "$TEST_DIR"'/integration_tests/msgs/issue_denom_msg.json')
 RES=$(exec_msg $ISSUE_DENOM_MSG "wasm-tester")
 
 # VERIFY DENOM
 echo "VERIFY DENOM"
-QUERY_DENOM_BY_ID=`read_json ./cosmwasm-testing/msgs/query_denom_by_id.json`
+QUERY_DENOM_BY_ID=$(read_json "$TEST_DIR"'/integration_tests/msgs/query_denom_by_id.json')
 DENOM_ID=$(echo $ISSUE_DENOM_MSG | jq -r '.issue_denom_msg.id')
 ISSUED_DENOM_ID=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_DENOM_BY_ID --output json | jq -r '.data.denom.id')
 
@@ -74,7 +79,7 @@ fi
 
 # VERIFY QUERY DENOM BY NAME
 echo "VERIFY QUERY DENOM BY NAME"
-QUERY_DENOM_BY_NAME=`read_json ./cosmwasm-testing/msgs/query_denom_by_name.json`
+QUERY_DENOM_BY_NAME=$(read_json "$TEST_DIR"'/integration_tests/msgs/query_denom_by_name.json')
 ISSUED_DENOM_ID=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_DENOM_BY_NAME --output json | jq -r '.data.denom.id')
 
 if [ "$ISSUED_DENOM_ID" != "$DENOM_ID" ];then
@@ -84,7 +89,7 @@ fi
 
 # VERIFY QUERY DENOM BY SYMBOL
 echo "VERIFY QUERY DENOM BY SYMBOL"
-QUERY_DENOM_BY_SYMBOL=`read_json ./cosmwasm-testing/msgs/query_denom_by_symbol.json`
+QUERY_DENOM_BY_SYMBOL=$(read_json "$TEST_DIR"'/integration_tests/msgs/query_denom_by_symbol.json')
 ISSUED_DENOM_ID=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_DENOM_BY_SYMBOL --output json | jq -r '.data.denom.id')
 
 if [ "$ISSUED_DENOM_ID" != "$DENOM_ID" ];then
@@ -94,7 +99,7 @@ fi
 
 # VERIFY QUERY ALL DENOMS
 echo "VERIFY QUERY ALL DENOMS"
-QUERY_DENOMS=`read_json ./cosmwasm-testing/msgs/query_denoms.json`
+QUERY_DENOMS=$(read_json "$TEST_DIR"'/integration_tests/msgs/query_denoms.json')
 QUERY_RES=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_DENOMS --output json)
 DENOM_ID=$(echo $QUERY_RES | jq -r '.data.denoms[0].id')
 
@@ -105,13 +110,13 @@ fi
 
 # MINT NFT
 echo "MINT NFT"
-MINT_NFT_MSG=$(jq '.mint_nft_msg.recipient = "'$wasmTesterAddress'"' './cosmwasm-testing/msgs/mint_nft_msg.json')
+MINT_NFT_MSG=$(jq '.mint_nft_msg.recipient = "'$wasmTesterAddress'"' $TEST_DIR'/integration_tests/msgs/mint_nft_msg.json')
 MINT_NFT_MSG=$(trim_json "$MINT_NFT_MSG")
 RES=$(exec_msg $MINT_NFT_MSG "wasm-tester")
 
 # VERIFY NFT MINT
 echo "VERIFY NFT MINT"
-QUERY_NFT=`read_json ./cosmwasm-testing/msgs/query_nft.json`
+QUERY_NFT=$(read_json "$TEST_DIR"'/integration_tests/msgs/query_nft.json')
 NFT_ID=$(echo $QUERY_NFT | jq -r '.query_token.token_id')
 MINTED_NFT_ID=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_NFT --output json | jq -r '.data.nft.id')
 
@@ -122,12 +127,12 @@ fi
 
 # EDIT NFT
 echo "EDIT NFT"
-EDIT_NFT_MSG=`read_json ./cosmwasm-testing/msgs/edit_nft_msg.json`
+EDIT_NFT_MSG=$(read_json "$TEST_DIR"'/integration_tests/msgs/edit_nft_msg.json')
 RES=$(exec_msg $EDIT_NFT_MSG "wasm-tester")
 
 # VERIFY NFT EDIT
 echo "VERIFY NFT EDIT"
-QUERY_NFT=`read_json ./cosmwasm-testing/msgs/query_nft.json`
+QUERY_NFT=$(read_json "$TEST_DIR"'/integration_tests/msgs/query_nft.json')
 NEW_NFT_NAME=$(echo $EDIT_NFT_MSG | jq -r '.edit_nft_msg.name')
 NEW_NFT_URI=$(echo $EDIT_NFT_MSG | jq -r '.edit_nft_msg.uri')
 QUERY_RES=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_NFT --output json)
@@ -141,7 +146,7 @@ fi
 
 # TRANSFER NFT
 echo "TRASNFER NFT"
-TRANSFER_NFT_MSG=$(jq '.transfer_nft_msg.to = "'$wasmNFTReceiverAddress'"' './cosmwasm-testing/msgs/transfer_nft_msg.json')
+TRANSFER_NFT_MSG=$(jq '.transfer_nft_msg.to = "'$wasmNFTReceiverAddress'"' $TEST_DIR'/integration_tests/msgs/transfer_nft_msg.json')
 TRANSFER_NFT_MSG=$(echo $TRANSFER_NFT_MSG | jq '.transfer_nft_msg.from = "'$wasmTesterAddress'"')
 TRANSFER_NFT_MSG=$(trim_json "$TRANSFER_NFT_MSG")
 RES=$(exec_msg $TRANSFER_NFT_MSG "wasm-tester")
@@ -158,13 +163,13 @@ fi
 
 # APPROVE NFT
 echo "APPROVE NFT"
-APPROVE_NFT_MSG=$(jq '.approve_nft_msg.approved_address = "'$wasmTesterAddress'"' './cosmwasm-testing/msgs/approve_nft_msg.json')
+APPROVE_NFT_MSG=$(jq '.approve_nft_msg.approved_address = "'$wasmTesterAddress'"' $TEST_DIR'/integration_tests/msgs/approve_nft_msg.json')
 APPROVE_NFT_MSG=$(trim_json "$APPROVE_NFT_MSG")
 RES=$(exec_msg $APPROVE_NFT_MSG "wasm-nft-receiver")
 
 # VERIFY APPROVE
 echo "VERIFY APPROVE"
-QUERY_NFT_APPROVALS=`read_json ./cosmwasm-testing/msgs/query_nft_approvals.json`
+QUERY_NFT_APPROVALS=$(read_json $TEST_DIR'/integration_tests/msgs/query_nft_approvals.json')
 QUERY_RES=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_NFT_APPROVALS --output json)
 APPROVED_ADDRESS=$(echo $QUERY_RES | jq -r '.data.approved_addresses[0]')
 
@@ -175,14 +180,14 @@ fi
 
 # REVOKE APPROVE NFT
 echo "REVOKE APPROVE NFT"
-REVOKE_APPROVE_NFT=`read_json ./cosmwasm-testing/msgs/revoke_approve_nft_msg.json`
+REVOKE_APPROVE_NFT=$(read_json $TEST_DIR'/integration_tests/msgs/revoke_approve_nft_msg.json')
 REVOKE_APPROVE_NFT=$(echo $REVOKE_APPROVE_NFT | jq '.revoke_approval_msg.address_to_revoke = "'$wasmTesterAddress'"')
 REVOKE_APPROVE_NFT=$(trim_json "$REVOKE_APPROVE_NFT")
 RES=$(exec_msg $REVOKE_APPROVE_NFT "wasm-nft-receiver")
 
 # VERIFY REVOKE APPROVE NFT
 echo "VERIFY REVOKE APPROVE NFT"
-QUERY_NFT=`read_json ./cosmwasm-testing/msgs/query_nft.json`
+QUERY_NFT=$(read_json $TEST_DIR'/integration_tests/msgs/query_nft.json')
 QUERY_RES=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_NFT --output json)
 APPROVED_ADDRESS=$(echo $QUERY_RES | jq -r '.data.nft.approved_addresses[0]')
 
@@ -193,13 +198,13 @@ fi
 
 # APPROVE ALL
 echo "APPROVE ALL"
-APPROVE_ALL_MSG=$(jq '.approve_all_msg.approved_operator = "'$wasmNFTReceiverAddress'"' './cosmwasm-testing/msgs/approve_all_msg.json')
+APPROVE_ALL_MSG=$(jq '.approve_all_msg.approved_operator = "'$wasmNFTReceiverAddress'"' $TEST_DIR'/integration_tests/msgs/approve_all_msg.json')
 APPROVE_ALL_MSG=$(trim_json "$APPROVE_ALL_MSG")
 RES=$(exec_msg $APPROVE_ALL_MSG "wasm-tester")
 
 # VERIFY APPROVE ALL
 echo "VERIFY APPROVE ALL"
-QUERY_APPROVED_FOR_ALL=$(read_json './cosmwasm-testing/msgs/query_approved_for_all.json')
+QUERY_APPROVED_FOR_ALL=$(read_json $TEST_DIR'/integration_tests/msgs/query_approved_for_all.json')
 QUERY_APPROVED_FOR_ALL=$(echo $QUERY_APPROVED_FOR_ALL | jq '.query_approved_for_all.owner_address = "'$wasmTesterAddress'"')
 QUERY_APPROVED_FOR_ALL=$(echo $QUERY_APPROVED_FOR_ALL | jq '.query_approved_for_all.operator_address = "'$wasmNFTReceiverAddress'"')
 QUERY_APPROVED_FOR_ALL=$(trim_json "$QUERY_APPROVED_FOR_ALL")
@@ -213,7 +218,7 @@ fi
 
 # REVOKE APPROVE ALL
 echo "REVOKE APPROVE ALL"
-REVOKE_APPROVE_ALL_MSG=$(jq '.approve_all_msg.approved_operator = "'$wasmNFTReceiverAddress'"' './cosmwasm-testing/msgs/approve_all_msg.json')
+REVOKE_APPROVE_ALL_MSG=$(jq '.approve_all_msg.approved_operator = "'$wasmNFTReceiverAddress'"' $TEST_DIR'/integration_tests/msgs/approve_all_msg.json')
 REVOKE_APPROVE_ALL_MSG=$(echo $REVOKE_APPROVE_ALL_MSG | jq '.approve_all_msg.approved = false')
 REVOKE_APPROVE_ALL_MSG=$(trim_json "$REVOKE_APPROVE_ALL_MSG")
 RES=$(exec_msg $REVOKE_APPROVE_ALL_MSG "wasm-tester")
@@ -230,7 +235,7 @@ fi
 
 # VERIFY QUERY COLLECTION
 echo "VERIFY QUERY COLLECTION"
-QUERY_COLLECTION=`read_json ./cosmwasm-testing/msgs/query_collection.json`
+QUERY_COLLECTION=$(read_json $TEST_DIR'/integration_tests/msgs/query_collection.json')
 QUERY_RES=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_COLLECTION --output json)
 NFT_NAME=$(echo $QUERY_RES | jq -r '.data.collection.nfts[0].name')
 
@@ -241,7 +246,7 @@ fi
 
 # VERIFY QUERY SUPPLY
 echo "VERIFY QUERY SUPPLY"
-QUERY_SUPPLY=`read_json ./cosmwasm-testing/msgs/query_supply.json`
+QUERY_SUPPLY=$(read_json $TEST_DIR'/integration_tests/msgs/query_supply.json')
 QUERY_RES=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_SUPPLY --output json)
 SUPPLY=$(echo $QUERY_RES | jq -r '.data.amount')
 
@@ -252,7 +257,7 @@ fi
 
 # VERIFY QUERY OWNER NFTs
 echo "VERIFY QUERY OWNER NFTs"
-QUERY_OWNER=`read_json ./cosmwasm-testing/msgs/query_owner.json`
+QUERY_OWNER=$(read_json $TEST_DIR'/integration_tests/msgs/query_owner.json')
 QUERY_OWNER=$(echo $QUERY_OWNER | jq '.query_owner.address = "'$wasmNFTReceiverAddress'"')
 QUERY_OWNER=$(trim_json "$QUERY_OWNER")
 QUERY_RES=$(CUDOS_NODED query wasm contract-state smart $CONTRACT $QUERY_OWNER --output json)
@@ -265,7 +270,7 @@ fi
 
 # BURN NFT
 echo "BURN NFT"
-BURN_NFT=`read_json ./cosmwasm-testing/msgs/burn_nft_msg.json`
+BURN_NFT=$(read_json $TEST_DIR'/integration_tests/msgs/burn_nft_msg.json')
 RES=$(exec_msg $BURN_NFT "wasm-nft-receiver")
 
 # VERIFY BURN NFT

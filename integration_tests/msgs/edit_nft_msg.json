@@ -1,0 +1,8 @@
+{
+    "edit_nft_msg": {
+        "denom_id": "testdenom",
+        "token_id": "1",
+        "name": "just_set_name",
+        "uri": "just_set_url"
+    }
+}

@@ -1,0 +1,5 @@
+{
+    "query_supply": {
+        "denom_id": "testdenom"
+    }
+}

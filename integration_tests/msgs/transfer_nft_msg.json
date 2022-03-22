@@ -1,0 +1,8 @@
+{
+    "transfer_nft_msg": {
+        "denom_id": "testdenom",
+        "token_id": "1",
+        "from": "",
+        "to": ""
+    }
+}

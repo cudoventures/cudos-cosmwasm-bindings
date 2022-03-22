@@ -1,0 +1,5 @@
+{
+    "query_denom_by_name": {
+        "denom_name": "TESTDENOM"               
+    }
+}

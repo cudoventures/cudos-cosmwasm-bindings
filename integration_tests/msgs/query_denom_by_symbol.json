@@ -1,0 +1,5 @@
+{
+    "query_denom_by_symbol": {
+        "denom_symbol": "testSymbol"               
+    }
+}

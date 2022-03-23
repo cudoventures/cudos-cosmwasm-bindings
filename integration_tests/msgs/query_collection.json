@@ -1,5 +1,9 @@
 {
     "query_collection": {
-        "denom_id": "testdenom"
+        "denom_id": "testdenom",
+        "pagination": {
+            "offset": 0,
+            "limit": 10
+        }
     }
 }

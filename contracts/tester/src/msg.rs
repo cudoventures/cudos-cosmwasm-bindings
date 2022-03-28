@@ -1,6 +1,10 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+use cudos_cosmwasm::{
+    PaginationRequest
+};
+
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct InstantiateMsg {}
 
@@ -63,10 +67,10 @@ pub enum QueryMsg {
     QueryDenomById { denom_id: String },
     QueryDenomByName { denom_name: String },
     QueryDenomBySymbol { denom_symbol: String },
-    QueryDenoms {},
-    QueryCollection { denom_id: String },
+    QueryDenoms { pagination: Option<PaginationRequest> },
+    QueryCollection { denom_id: String, pagination: Option<PaginationRequest> },
     QuerySupply { denom_id: String },
-    QueryOwner { denom_id: Option<String>, address: String },
+    QueryOwner { denom_id: Option<String>, address: String, pagination: Option<PaginationRequest> },
     QueryToken { denom_id: String, token_id: String },
     QueryApprovals { denom_id: String, token_id: String },
     QueryApprovedForAll { owner_address: String, operator_address: String},

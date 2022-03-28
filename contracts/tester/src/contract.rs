@@ -9,8 +9,9 @@ use cudos_cosmwasm::{
     create_issue_denom_msg, create_mint_nft_msg, create_revoke_msg, create_transfer_nft_msg,
     create_transfer_denom_msg,
     CudosMsg, CudosQuerier, DenomResponse, QueryNFTResponse, DenomsResponse, CollectionResponse, SupplyResponse, 
-    OwnerCollectionResponse, QueryApprovalsResponse, QueryApprovedForAllResponse,
+    OwnerCollectionResponse, QueryApprovalsResponse, QueryApprovedForAllResponse, PaginationRequest,
 };
+
 
 #[entry_point]
 pub fn instantiate(
@@ -263,10 +264,10 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<QueryResponse> {
         QueryMsg::QueryDenomById { denom_id } => to_binary(&query_denom_by_id(deps, denom_id)?),
         QueryMsg::QueryDenomByName { denom_name } => to_binary(&query_denom_by_name(deps, denom_name)?),
         QueryMsg::QueryDenomBySymbol {denom_symbol} => to_binary(&query_denom_by_symbol(deps, denom_symbol)?),
-        QueryMsg::QueryDenoms {} => to_binary(&query_denoms(deps)?),
-        QueryMsg::QueryCollection { denom_id } => to_binary(&query_collection(deps, denom_id)?),
+        QueryMsg::QueryDenoms { pagination } => to_binary(&query_denoms(deps, pagination)?),
+        QueryMsg::QueryCollection { denom_id, pagination } => to_binary(&query_collection(deps, denom_id, pagination)?),
         QueryMsg::QuerySupply { denom_id } => to_binary(&query_supply(deps, denom_id)?),
-        QueryMsg::QueryOwner { denom_id , address} => to_binary(&query_owner(deps, denom_id, address)?),
+        QueryMsg::QueryOwner { denom_id , address, pagination} => to_binary(&query_owner(deps, denom_id, address, pagination)?),
         QueryMsg::QueryToken { denom_id, token_id } => to_binary(&query_token(deps, denom_id, token_id)?),
         QueryMsg::QueryApprovals { denom_id, token_id } => to_binary(&query_approvals(deps, denom_id, token_id)?),
         QueryMsg::QueryApprovedForAll { owner_address, operator_address } => to_binary(&query_approved_for_all(deps, owner_address, operator_address)?)
@@ -294,16 +295,16 @@ pub fn query_denom_by_symbol(deps: Deps, denom_symbol: String) -> StdResult<Deno
     Ok(res)
 }
 
-pub fn query_denoms(deps: Deps) -> StdResult<DenomsResponse> {
+pub fn query_denoms(deps: Deps, pagination: Option<PaginationRequest>) -> StdResult<DenomsResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: DenomsResponse = querier.query_denoms()?;
+    let res: DenomsResponse = querier.query_denoms(pagination)?;
 
     Ok(res)
 }
 
-pub fn query_collection(deps: Deps, denom_id: String) -> StdResult<CollectionResponse> {
+pub fn query_collection(deps: Deps, denom_id: String, pagination: Option<PaginationRequest>) -> StdResult<CollectionResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: CollectionResponse = querier.query_collection(denom_id)?;
+    let res: CollectionResponse = querier.query_collection(denom_id, pagination)?;
 
     Ok(res)
 }
@@ -315,9 +316,9 @@ pub fn query_supply(deps: Deps, denom_id: String) -> StdResult<SupplyResponse> {
     Ok(res)
 }
 
-pub fn query_owner(deps: Deps, denom_id: Option<String>, address: String) -> StdResult<OwnerCollectionResponse> {
+pub fn query_owner(deps: Deps, denom_id: Option<String>, address: String, pagination: Option<PaginationRequest>) -> StdResult<OwnerCollectionResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: OwnerCollectionResponse = querier.query_owner(denom_id, address)?;
+    let res: OwnerCollectionResponse = querier.query_owner(denom_id, address, pagination)?;
 
     Ok(res)
 }

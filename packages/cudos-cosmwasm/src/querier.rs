@@ -2,7 +2,7 @@ use cosmwasm_std::{QuerierWrapper, StdResult};
 
 use crate::query::{
     CollectionResponse, CudosQuery, DenomResponse, DenomsResponse, OwnerCollectionResponse,
-    QueryNFTResponse, SupplyResponse, QueryApprovalsResponse, QueryApprovedForAllResponse,
+    QueryNFTResponse, SupplyResponse, QueryApprovalsResponse, QueryApprovedForAllResponse, PaginationRequest,
 };
 
 pub struct CudosQuerier<'a> {
@@ -41,14 +41,19 @@ impl<'a> CudosQuerier<'a> {
         self.querier.custom_query(&request)
     }
 
-    pub fn query_denoms<>(&self) -> StdResult<DenomsResponse> {
-        let request = CudosQuery::QueryDenoms {}.into();
+    pub fn query_denoms<>(&self, pagination: Option<PaginationRequest>) -> StdResult<DenomsResponse> {
+        let request = CudosQuery::QueryDenoms {
+            pagination: pagination,
+        }
+        .into();
+
         self.querier.custom_query(&request)
     }
 
-    pub fn query_collection<T: Into<String>>(&self, denom_id: T) -> StdResult<CollectionResponse> {
+    pub fn query_collection<T: Into<String>>(&self, denom_id: T, pagination: Option<PaginationRequest>) -> StdResult<CollectionResponse> {
         let request = CudosQuery::QueryCollection {
             denom_id: denom_id.into(),
+            pagination: pagination.into(),
         }
         .into();
 
@@ -68,10 +73,12 @@ impl<'a> CudosQuerier<'a> {
         &self,
         denom_id: T,
         address: D,
+        pagination: Option<PaginationRequest>,
     ) -> StdResult<OwnerCollectionResponse> {
         let request = CudosQuery::QueryOwner {
             denom_id: denom_id.into(),
             address: address.into(),
+            pagination: pagination.into(),
         }
         .into();
 

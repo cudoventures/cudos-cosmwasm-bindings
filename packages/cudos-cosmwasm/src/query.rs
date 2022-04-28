@@ -19,9 +19,12 @@ pub enum CudosQuery {
     QueryDenomBySymbol {
         denom_symbol: String,
     },
-    QueryDenoms {},
+    QueryDenoms {
+        pagination: Option<PaginationRequest>,
+    },
     QueryCollection {
         denom_id: String,
+        pagination: Option<PaginationRequest>,
     },
     QuerySupply {
         denom_id: String,
@@ -29,6 +32,7 @@ pub enum CudosQuery {
     QueryOwner {
         denom_id: Option<String>,
         address: String,
+        pagination: Option<PaginationRequest>,
     },
     QueryToken {
         denom_id: String,
@@ -84,7 +88,7 @@ pub struct DenomResponse {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct DenomsResponse {
-    pub denoms: Vec<Denom>,
+    pub denoms: Option<Vec<Denom>>,
     pub pagination: Option<PageResponse>,
 }
 
@@ -98,19 +102,44 @@ pub struct Denom {
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct CollectionResponse {
-    pub collection: Collection,
+    pub collection: Option<Collection>,
     pub pagination: Option<PageResponse>,
 }
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct PaginationRequest {
+    // key is a value returned in PageResponse.next_key to begin
+	// querying the next page most efficiently. Only one of offset or key
+	// should be set.
+	pub key: Option<String>,
+	// offset is a numeric offset that can be used when key is unavailable.
+	// It is less efficient than using key. Only one of offset or key should
+	// be set.
+	pub offset: Option<u64>,
+	// limit is the total number of results to be returned in the result page.
+	// If left empty it will default to a value to be set by each app.
+	pub limit: Option<u64>,
+	// count_total is set to true  to indicate that the result set should include
+	// a count of the total number of items available for pagination in UIs.
+	// count_total is only respected when offset is used. It is ignored when key
+	// is set.
+	pub count_total: Option<bool>,
+	// reverse is set to true if results are to be returned in the descending order.
+	//
+	// Since: cosmos-sdk 0.43
+	pub reverse: Option<bool>,
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct PageResponse {
-    pub next_key: Option<Vec<u8>>,
-    pub total: Option<i64>,
+    pub next_key: Option<String>,
+    pub total: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct Collection {
     pub denom: Denom,
-    pub nfts: Vec<NFT>,
+    pub nfts: Option<Vec<NFT>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]

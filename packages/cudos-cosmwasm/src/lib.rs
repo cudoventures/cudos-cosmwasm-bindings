@@ -12,7 +12,7 @@ pub use querier::CudosQuerier;
 pub use query::{
     Collection, CollectionResponse, CudosQuery, Denom, DenomResponse, DenomsResponse, IDCollection,
     Owner, OwnerCollectionResponse, PageResponse, QueryApprovalsResponse,
-    QueryApprovedForAllResponse, QueryNFTResponse, SupplyResponse, NFT,
+    QueryApprovedForAllResponse, QueryNFTResponse, SupplyResponse, NFT, PaginationRequest,
 };
 
 // TODO: Research how to enable "cudos" on the blockchain

@@ -3,6 +3,11 @@ use serde::{Deserialize, Serialize};
 
 use cosmwasm_std::CosmosMsg;
 
+use cosmwasm_std::CustomMsg;
+
+// implement custom msg
+impl CustomMsg for CudosMsg {}
+
 // this is a helper to be able to return these as CosmosMsg easier
 impl From<CudosMsg> for CosmosMsg<CudosMsg> {
     fn from(original: CudosMsg) -> Self {

@@ -10,12 +10,13 @@ use cudos_cosmwasm::{
     create_transfer_denom_msg,
     CudosMsg, CudosQuerier, DenomResponse, QueryNFTResponse, DenomsResponse, CollectionResponse, SupplyResponse, 
     OwnerCollectionResponse, QueryApprovalsResponse, QueryApprovedForAllResponse, PaginationRequest,
+    CudosQuery,
 };
 
 
 #[entry_point]
 pub fn instantiate(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     _env: Env,
     _info: MessageInfo,
     _msg: InstantiateMsg,
@@ -25,7 +26,7 @@ pub fn instantiate(
 
 #[entry_point]
 pub fn execute(
-    deps: DepsMut,
+    deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
@@ -82,7 +83,7 @@ pub fn execute(
 }
 
 pub fn execute_msg_issue_denom(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     id: String,
@@ -103,7 +104,7 @@ pub fn execute_msg_issue_denom(
 }
 
 pub fn execute_msg_mint_nft(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     denom_id: String,
@@ -126,7 +127,7 @@ pub fn execute_msg_mint_nft(
 }
 
 pub fn execute_msg_edit_nft(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     denom_id: String,
@@ -149,7 +150,7 @@ pub fn execute_msg_edit_nft(
 }
 
 pub fn execute_msg_transfer_nft(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     denom_id: String,
@@ -170,7 +171,7 @@ pub fn execute_msg_transfer_nft(
 }
 
 pub fn execute_msg_transfer_denom(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     denom_id: String,
@@ -187,7 +188,7 @@ pub fn execute_msg_transfer_denom(
 }
 
 pub fn execute_msg_burn_nft(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     denom_id: String,
@@ -204,7 +205,7 @@ pub fn execute_msg_burn_nft(
 }
 
 pub fn execute_msg_approve_nft(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     denom_id: String,
@@ -223,7 +224,7 @@ pub fn execute_msg_approve_nft(
 }
 
 pub fn execute_msg_approve_all(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     approved_operator: String,
@@ -240,7 +241,7 @@ pub fn execute_msg_approve_all(
 }
 
 pub fn execute_msg_revoke_nft(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     env: Env,
     info: MessageInfo,
     denom_id: String,
@@ -259,7 +260,7 @@ pub fn execute_msg_revoke_nft(
 }
 
 #[entry_point]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<QueryResponse> {
+pub fn query(deps: Deps<CudosQuery>, _env: Env, msg: QueryMsg) -> StdResult<QueryResponse> {
     match msg {
         QueryMsg::QueryDenomById { denom_id } => to_binary(&query_denom_by_id(deps, denom_id)?),
         QueryMsg::QueryDenomByName { denom_name } => to_binary(&query_denom_by_name(deps, denom_name)?),
@@ -274,68 +275,68 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<QueryResponse> {
     }
 }
 
-pub fn query_denom_by_id(deps: Deps, denom_id: String) -> StdResult<DenomResponse> {
+pub fn query_denom_by_id(deps: Deps<CudosQuery>, denom_id: String) -> StdResult<DenomResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: DenomResponse = querier.query_denom_by_id(denom_id)?;
 
     Ok(res)
 }
 
-pub fn query_denom_by_name(deps: Deps, denom_name: String) -> StdResult<DenomResponse> {
+pub fn query_denom_by_name(deps: Deps<CudosQuery>, denom_name: String) -> StdResult<DenomResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: DenomResponse = querier.query_denom_by_name(denom_name)?;
 
     Ok(res)
 }
 
-pub fn query_denom_by_symbol(deps: Deps, denom_symbol: String) -> StdResult<DenomResponse> {
+pub fn query_denom_by_symbol(deps: Deps<CudosQuery>, denom_symbol: String) -> StdResult<DenomResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: DenomResponse = querier.query_denom_by_symbol(denom_symbol)?;
 
     Ok(res)
 }
 
-pub fn query_denoms(deps: Deps, pagination: Option<PaginationRequest>) -> StdResult<DenomsResponse> {
+pub fn query_denoms(deps: Deps<CudosQuery>, pagination: Option<PaginationRequest>) -> StdResult<DenomsResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: DenomsResponse = querier.query_denoms(pagination)?;
 
     Ok(res)
 }
 
-pub fn query_collection(deps: Deps, denom_id: String, pagination: Option<PaginationRequest>) -> StdResult<CollectionResponse> {
+pub fn query_collection(deps: Deps<CudosQuery>, denom_id: String, pagination: Option<PaginationRequest>) -> StdResult<CollectionResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: CollectionResponse = querier.query_collection(denom_id, pagination)?;
 
     Ok(res)
 }
 
-pub fn query_supply(deps: Deps, denom_id: String) -> StdResult<SupplyResponse> {
+pub fn query_supply(deps: Deps<CudosQuery>, denom_id: String) -> StdResult<SupplyResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: SupplyResponse = querier.query_supply(denom_id)?;
 
     Ok(res)
 }
 
-pub fn query_owner(deps: Deps, denom_id: Option<String>, address: String, pagination: Option<PaginationRequest>) -> StdResult<OwnerCollectionResponse> {
+pub fn query_owner(deps: Deps<CudosQuery>, denom_id: Option<String>, address: String, pagination: Option<PaginationRequest>) -> StdResult<OwnerCollectionResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: OwnerCollectionResponse = querier.query_owner(denom_id, address, pagination)?;
 
     Ok(res)
 }
 
-pub fn query_token(deps: Deps, denom_id: String, token_id: String) -> StdResult<QueryNFTResponse> {
+pub fn query_token(deps: Deps<CudosQuery>, denom_id: String, token_id: String) -> StdResult<QueryNFTResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: QueryNFTResponse = querier.query_token(denom_id, token_id)?;
     Ok(res)
 }
 
-pub fn query_approvals(deps: Deps, denom_id: String, token_id: String) -> StdResult<QueryApprovalsResponse> {
+pub fn query_approvals(deps: Deps<CudosQuery>, denom_id: String, token_id: String) -> StdResult<QueryApprovalsResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: QueryApprovalsResponse = querier.query_approvals(denom_id, token_id)?;
     Ok(res)
 }
 
-pub fn query_approved_for_all(deps: Deps, owner_address: String, operator_address: String) -> StdResult<QueryApprovedForAllResponse> {
+pub fn query_approved_for_all(deps: Deps<CudosQuery>, owner_address: String, operator_address: String) -> StdResult<QueryApprovedForAllResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: QueryApprovedForAllResponse = querier.query_approved_for_all(owner_address, operator_address)?;
     Ok(res)

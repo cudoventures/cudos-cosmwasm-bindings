@@ -39,7 +39,7 @@ use cudos_cosmwasm::{create_mint_nft_msg};
 ...
 ​
 pub fn execute_msg_mint_nft(
-    _deps: DepsMut,
+    _deps: DepsMut<CudosQuery>,
     _env: Env,
     _info: MessageInfo,
     denom_id: String,

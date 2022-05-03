@@ -6,11 +6,11 @@ use crate::query::{
 };
 
 pub struct CudosQuerier<'a> {
-    querier: &'a QuerierWrapper<'a>,
+    querier: &'a QuerierWrapper<'a, CudosQuery>,
 }
 
 impl<'a> CudosQuerier<'a> {
-    pub fn new(querier: &'a QuerierWrapper<'a>) -> Self {
+    pub fn new(querier: &'a QuerierWrapper<'a, CudosQuery>) -> Self {
         CudosQuerier { querier }
     }
 
@@ -20,7 +20,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_denom_by_name<T: Into<String>>(&self, denom_name: T) -> StdResult<DenomResponse> {
@@ -29,7 +29,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_denom_by_symbol<T: Into<String>>(&self, symbol: T) -> StdResult<DenomResponse> {
@@ -38,7 +38,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_denoms<>(&self, pagination: Option<PaginationRequest>) -> StdResult<DenomsResponse> {
@@ -47,7 +47,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_collection<T: Into<String>>(&self, denom_id: T, pagination: Option<PaginationRequest>) -> StdResult<CollectionResponse> {
@@ -57,7 +57,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_supply<T: Into<String>>(&self, denom_id: T) -> StdResult<SupplyResponse> {
@@ -66,7 +66,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_owner<T: Into<Option<String>>, D: Into<String>>(
@@ -82,7 +82,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_token<T: Into<String>>(
@@ -96,7 +96,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_approvals<T: Into<String>>(
@@ -110,7 +110,7 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 
     pub fn query_approved_for_all<T: Into<String>>(
@@ -124,6 +124,6 @@ impl<'a> CudosQuerier<'a> {
         }
         .into();
 
-        self.querier.custom_query(&request)
+        self.querier.query(&request)
     }
 }

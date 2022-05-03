@@ -5,9 +5,10 @@ CUDOS_NODED_RUNNING_INSTANCE_PATH=$3
 alias CUDOS_NODED='cudos-noded'
 
 CONTRACT=''
+FEE_FLAGS='--gas auto --gas-adjustment 1.3 --gas-prices 5000000000000acudos'
 
 exec_msg() {
-    RES=$(CUDOS_NODED tx wasm execute $CONTRACT $1 --from $2 --gas auto --gas-adjustment 1.3 --keyring-backend test --chain-id="$CHAIN_ID" -y)
+    RES=$(CUDOS_NODED tx wasm execute $CONTRACT $1 --from $2 $FEE_FLAGS --keyring-backend test --chain-id="$CHAIN_ID" -y)
     echo "$RES"
 }
 
@@ -36,18 +37,18 @@ wasmNFTReceiverAddress=$(CUDOS_NODED keys show -a wasm-nft-receiver --keyring-ba
 
 # ADD FUNDS
 echo "ADD FUNDS"
-CUDOS_NODED tx bank send faucet "$wasmTesterAddress" 100000acudos --keyring-backend test --chain-id="$CHAIN_ID" -y
-CUDOS_NODED tx bank send faucet "$wasmNFTReceiverAddress" 100000acudos --keyring-backend test --chain-id="$CHAIN_ID" -y
+CUDOS_NODED tx bank send faucet "$wasmTesterAddress" 100000000000000000000acudos --keyring-backend test --chain-id="$CHAIN_ID" $FEE_FLAGS -y
+CUDOS_NODED tx bank send faucet "$wasmNFTReceiverAddress" 100000000000000000000acudos --keyring-backend test --chain-id="$CHAIN_ID" $FEE_FLAGS -y
 
 # STORE CODE
 echo "STORE CODE"
-RES=$(CUDOS_NODED tx wasm store "$CONTRACT_PATH" --from wasm-tester --gas auto --gas-adjustment 1.3 --keyring-backend test --chain-id=$CHAIN_ID -y)
+RES=$(CUDOS_NODED tx wasm store "$CONTRACT_PATH" --from wasm-tester $FEE_FLAGS --keyring-backend test --chain-id=$CHAIN_ID -y)
 CODE_ID=$(echo $RES | jq -r '.logs[0].events[-1].attributes[0].value')
 echo "Deployed code id: $CODE_ID"
 
 # INSTANTIATE CONTRACT
 echo "INSTANTIATE CONTRACT"
-RES=$(CUDOS_NODED tx wasm instantiate $CODE_ID "{}" --label "test bindings" --from wasm-tester --gas auto --gas-adjustment 1.3 --keyring-backend test --chain-id="$CHAIN_ID" -y)
+RES=$(CUDOS_NODED tx wasm instantiate $CODE_ID "{}" --label "test bindings" --no-admin --from wasm-tester $FEE_FLAGS --keyring-backend test --chain-id="$CHAIN_ID" -y)
 
 # VERIFY INSTANTIATION
 echo "VERIFY INSTANTIATION"

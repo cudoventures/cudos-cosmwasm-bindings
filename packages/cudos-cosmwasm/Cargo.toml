@@ -1,6 +1,6 @@
 [package]
 name = "cudos-cosmwasm"
-version = "0.0.6"
+version = "0.0.7"
 authors = ["Lyubomir Yonchev <lyubomir.yonchev@limechain.tech>"]
 edition = "2018"
 description = "Bindings for CosmWasm contracts to call into custom modules of Cudos Node"
@@ -12,9 +12,9 @@ readme = "README.md"
 backtraces = ["cosmwasm-std/backtraces"]
 
 [dependencies]
-cosmwasm-std = "0.16.0"
+cosmwasm-std = "1.0.0-beta"
 schemars = "0.8.1"
 serde = { version = "1.0.103", default-features = false, features = ["derive"] }
 
 [dev-dependencies]
-cosmwasm-schema = "0.16.0"
+cosmwasm-schema = "1.0.0-beta"

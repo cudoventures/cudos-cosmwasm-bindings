@@ -7,7 +7,7 @@
  Add the crate to your smart contract's' Cargo.toml
  ```toml
 [dependencies]
-cudos-cosmwasm = { version = "0.0.5" }
+cudos-cosmwasm = { version = "0.0.7" }
 ```
 
  # Exposed bindings

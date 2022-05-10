@@ -1,0 +1,9 @@
+{
+    "undelegate_msg": {
+        "validator": "",
+        "amount": {
+            "amount": "500",
+            "denom": "acudos"
+        }
+    }
+}

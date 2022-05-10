@@ -1,0 +1,8 @@
+{
+    "burn_msg": {
+        "amount": [{
+            "amount": "99999999999999999000",
+            "denom": "acudos"
+        }]
+    }
+}

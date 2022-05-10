@@ -1,0 +1,9 @@
+{
+    "delegate_msg": {
+        "validator": "",
+        "amount": {
+            "amount": "1000",
+            "denom": "acudos"
+        }
+    }
+}

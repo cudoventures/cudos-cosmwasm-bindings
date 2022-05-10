@@ -9,20 +9,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
 
 [[package]]
-name = "bindings-tester"
-version = "0.0.1"
-dependencies = [
- "cosmwasm-schema",
- "cosmwasm-std",
- "cosmwasm-storage",
- "cudos-cosmwasm 0.0.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "schemars",
- "serde",
- "snafu",
- "thiserror",
-]
-
-[[package]]
 name = "block-buffer"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -350,6 +336,33 @@ name = "libc"
 version = "0.2.108"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8521a1b57e76b1ec69af7599e75e38e7b7fad6610f037db8c79b127201b5d119"
+
+[[package]]
+name = "native-tester"
+version = "0.0.1"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cosmwasm-storage",
+ "schemars",
+ "serde",
+ "snafu",
+ "thiserror",
+]
+
+[[package]]
+name = "nft-bindings-tester"
+version = "0.0.1"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cosmwasm-storage",
+ "cudos-cosmwasm 0.0.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "schemars",
+ "serde",
+ "snafu",
+ "thiserror",
+]
 
 [[package]]
 name = "opaque-debug"

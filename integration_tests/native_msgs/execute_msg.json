@@ -1,0 +1,14 @@
+{
+    "execute_msg": {
+        "contract_addr": "",
+        "msg": {
+            "burn_msg": {
+                "amount": [{
+                    "amount": "100000000000000000000",
+                    "denom": "acudos"
+                }]
+            }
+        },
+        "funds": []
+    }
+}

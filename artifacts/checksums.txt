@@ -1,1 +1,0 @@
-3eca61ec74c54b73a73369a2d36e855100ec61aea6f4e480489b308d03b463a8  bindings_tester.wasm

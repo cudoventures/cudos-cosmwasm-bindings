@@ -1,9 +1,9 @@
 [package]
-name = "bindings-tester"
+name = "native-tester"
 version = "0.0.1"
-authors = ["Lyubomir Yonchev <lyubomir.yonchev@limechain.tech>"]
-edition = "2018"
-description = "simple tester for cudos-cosmwasm-bindings"
+authors = ["Angel Valkov <angel.valkov@limechain.tech>"]
+edition = "2021"
+description = "simple tester for native modules"
 license = "Apache-2.0"
 repository = "https://github.com/CudoVentures/cudos-cosmwasm-bindings"
 homepage = "https://www.cudos.org/"
@@ -19,8 +19,7 @@ backtraces = ["cosmwasm-std/backtraces"]
 library = []
 
 [dependencies]
-cudos-cosmwasm = { version = "0.0.7" }
-cosmwasm-std = { version = "1.0.0-beta" }
+cosmwasm-std = { version = "1.0.0-beta", features = ["staking", "stargate"] }
 cosmwasm-storage = { version = "1.0.0-beta" }
 schemars = "0.8.1"
 serde = { version = "1.0.103", default-features = false, features = ["derive"] }

@@ -19,7 +19,7 @@ backtraces = ["cosmwasm-std/backtraces"]
 library = []
 
 [dependencies]
-cudos-cosmwasm = { version = "0.0.7" }
+cudos-cosmwasm = { version = "0.0.7", path = "../../packages/cudos-cosmwasm" }
 cosmwasm-std = { version = "1.0.0-beta" }
 cosmwasm-storage = { version = "1.0.0-beta" }
 schemars = "0.8.1"
@@ -30,3 +30,4 @@ thiserror = "1.0"
 [dev-dependencies]
 # we only need to enable this if we use integration tests
 cosmwasm-schema = { version = "1.0.0-beta" }
+cudos-cosmwasm-test = { version = "0.0.1", path = "../../packages/cudos-cosmwasm-test" }

@@ -1,0 +1,28 @@
+on: pull_request
+name: Test
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository and checkout branch
+        uses: actions/checkout@v2
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+      - name: Build project
+        run: cargo build
+      - name: Compile tester contract
+        run: |
+          docker run --rm -v "$(pwd)":/code \
+          --mount type=volume,source="cudos_cosmwasm_cache",target=/code/target \
+          --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+          cosmwasm/workspace-optimizer:0.12.6
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.18
+      - name: Run tests
+        run: RUST_BACKTRACE=1 cargo test

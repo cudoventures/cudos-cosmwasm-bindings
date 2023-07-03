@@ -1,9 +1,6 @@
+use cosmwasm_std::{CosmosMsg, CustomMsg, Coin};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-
-use cosmwasm_std::CosmosMsg;
-
-use cosmwasm_std::CustomMsg;
 
 // implement custom msg
 impl CustomMsg for CudosMsg {}
@@ -25,6 +22,10 @@ pub enum CudosMsg {
         schema: Option<String>,
         sender: String,
         contract_address_signer: String,
+        traits: Option<String>,
+        minter: Option<String>,
+        description: Option<String>,
+        data: Option<String>,
     },
     MintNftMsg {
         denom_id: String,
@@ -84,6 +85,83 @@ pub enum CudosMsg {
         sender: String,
         contract_address_signer: String,
     },
+    PublishCollectionMsg {
+        creator: String,
+        denom_id: String,
+        mint_royalties: Vec<Royalty>,
+        resale_royalties: Vec<Royalty>,
+    },
+    PublishNftMsg {
+        creator: String,
+        token_id: String,
+        denom_id: String,
+        price: Coin,
+    },
+    BuyNftMsg {
+        creator: String,
+        id: u64,
+    },
+    MintNftMarketplaceMsg {
+        creator: String,
+        denom_id: String,
+        recipient: String,
+        price: Coin,
+        name: String,
+        uri: Option<String>,
+        data: Option<String>,
+        uid: String,
+    },
+    RemoveNftMsg {
+        creator: String,
+        id: u64,
+    },
+    VerifyCollectionMsg {
+        creator: String,
+        id: u64,
+    },
+    UnverifyCollectionMsg {
+        creator: String,
+        id: u64,
+    },
+    CreateCollectionMsg {
+        creator: String,
+        id: String,
+        name: String,
+        symbol: String,
+        schema: Option<String>,
+        traits: Option<String>,
+        minter: Option<String>,
+        description: Option<String>,
+        data: Option<String>,
+        mint_royalties: Vec<Royalty>,
+        resale_royalties: Vec<Royalty>,
+        verified: bool,
+    },
+    UpdateRoyaltiesMsg {
+        creator: String,
+        id: u64,
+        mint_royalties: Vec<Royalty>,
+        resale_royalties: Vec<Royalty>,
+    },
+    UpdatePriceMsg {
+        creator: String,
+        id: u64,
+        price: Coin,
+    },
+    AddAdminMsg {
+        creator: String,
+        address: String,
+    },
+    RemoveAdminMsg {
+        creator: String,
+        address: String,
+    },
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct Royalty {
+    pub address: String,
+    pub percent: String,
 }
 
 pub fn create_issue_denom_msg(
@@ -93,6 +171,10 @@ pub fn create_issue_denom_msg(
     schema: Option<String>,
     sender: String,
     contract_address_signer: String,
+    traits: Option<String>,
+    minter: Option<String>,
+    description: Option<String>,
+    data: Option<String>,
 ) -> CosmosMsg<CudosMsg> {
     CudosMsg::IssueDenomMsg {
         id,
@@ -101,6 +183,10 @@ pub fn create_issue_denom_msg(
         schema,
         sender,
         contract_address_signer,
+        traits,
+        minter,
+        description,
+        data,
     }
     .into()
 }

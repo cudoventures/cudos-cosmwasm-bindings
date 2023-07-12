@@ -9,6 +9,9 @@ repository = "https://github.com/CudoVentures/cudos-cosmwasm-bindings"
 homepage = "https://www.cudos.org/"
 documentation = "https://docs.cudos.org/"
 readme = "README.md"
+[[example]]
+name = "schema_nft_bindings_tester"
+path = "examples/schema.rs"
 
 
 [lib]

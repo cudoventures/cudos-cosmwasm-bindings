@@ -1,12 +1,10 @@
-use cosmwasm_std::{Coin};
+use cosmwasm_std::Coin;
 use cudos_cosmwasm::{
-    CollectionResponse, CollectionsResponse, Denom, DenomResponse,
-    DenomsResponse, MarketplaceNft, OwnerCollectionResponse,
-    QueryAllCollectionsResponse, QueryAllNftsResponse, QueryApprovalsResponse,
-    QueryApprovedForAllResponse, QueryCollectionByDenomIdResponse,
-    QueryCollectionMarketplaceResponse, QueryListAdminsResponse,
-    QueryNFTResponse, QueryNftMarketplaceResponse, Royalty, SupplyResponse,
-    NFT,
+    CollectionResponse, CollectionsResponse, Denom, DenomResponse, DenomsResponse, MarketplaceNft,
+    OwnerCollectionResponse, QueryAllCollectionsResponse, QueryAllNftsResponse,
+    QueryApprovalsResponse, QueryApprovedForAllResponse, QueryCollectionByDenomIdResponse,
+    QueryCollectionMarketplaceResponse, QueryListAdminsResponse, QueryNFTResponse,
+    QueryNftMarketplaceResponse, Royalty, SupplyResponse, NFT,
 };
 use cudos_cosmwasm_test::cudos_noded::CudosNoded;
 use nft_bindings_tester::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
@@ -39,8 +37,7 @@ fn bindings_work() {
 
     instantiate_res.assert_success();
 
-    let contract_address =
-        instantiate_res.get_attr("instantiate", "_contract_address");
+    let contract_address = instantiate_res.get_attr("instantiate", "_contract_address");
 
     let denom_id = "testdenom";
 
@@ -386,13 +383,12 @@ fn bindings_work() {
 
     assert_eq!(collection_res.collection.id, collection_id);
 
-    let collection_by_denom_res: QueryCollectionByDenomIdResponse = node
-        .wasm_query(
-            contract_address.clone(),
-            &QueryMsg::QueryCollectionByDenomId {
-                denom_id: denom_id.to_string(),
-            },
-        );
+    let collection_by_denom_res: QueryCollectionByDenomIdResponse = node.wasm_query(
+        contract_address.clone(),
+        &QueryMsg::QueryCollectionByDenomId {
+            denom_id: denom_id.to_string(),
+        },
+    );
 
     assert_eq!(
         collection_by_denom_res.collection.owner,
@@ -408,8 +404,8 @@ fn bindings_work() {
     )
     .assert_success();
 
-    let list_admins_res: QueryListAdminsResponse = node
-        .wasm_query(contract_address.clone(), &QueryMsg::QueryListAdmins {});
+    let list_admins_res: QueryListAdminsResponse =
+        node.wasm_query(contract_address.clone(), &QueryMsg::QueryListAdmins {});
 
     assert_eq!(list_admins_res.admins, vec![bob.address.to_string()]);
 
@@ -436,8 +432,7 @@ fn bindings_work() {
 
     mint_nft_marketplace_res.assert_success();
 
-    let token_id =
-        mint_nft_marketplace_res.get_attr("marketplace_mint_nft", "token_id");
+    let token_id = mint_nft_marketplace_res.get_attr("marketplace_mint_nft", "token_id");
 
     let publish_nft_res = node.wasm_execute(
         contract_address.clone(),
@@ -456,10 +451,8 @@ fn bindings_work() {
         .parse::<u64>()
         .unwrap();
 
-    let query_nft_res: QueryNftMarketplaceResponse = node.wasm_query(
-        contract_address.clone(),
-        &QueryMsg::QueryNft { id: nft_id },
-    );
+    let query_nft_res: QueryNftMarketplaceResponse =
+        node.wasm_query(contract_address.clone(), &QueryMsg::QueryNft { id: nft_id });
 
     assert_eq!(
         query_nft_res.nft,

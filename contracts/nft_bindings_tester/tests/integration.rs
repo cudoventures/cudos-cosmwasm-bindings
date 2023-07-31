@@ -14,10 +14,12 @@ const WASM_PATH: &str = "../../artifacts/nft_bindings_tester.wasm";
 
 #[test]
 fn bindings_work() {
+    println!("Starting Test Node...");
     let node = CudosNoded::instance();
     let alice = CudosNoded::ALICE;
     let bob = CudosNoded::BOB;
 
+    println!("Uploading contract from {}...", WASM_PATH);
     let upload_res = node.upload_contract(Path::new(WASM_PATH), alice);
 
     upload_res.assert_success();
@@ -27,6 +29,7 @@ fn bindings_work() {
         .parse::<u64>()
         .unwrap();
 
+    println!("Instantiating uploaded contract with code id {}.", code_id);
     let instantiate_res = node.instantiate_contract(
         code_id,
         &InstantiateMsg {},
@@ -38,6 +41,8 @@ fn bindings_work() {
     instantiate_res.assert_success();
 
     let contract_address = instantiate_res.get_attr("instantiate", "_contract_address");
+    println!("Instantiated. Contract address: {}.", contract_address);
+    println!("Start testing...");
 
     let denom_id = "testdenom";
 

@@ -22,7 +22,7 @@ impl CudosNoded {
     pub const INSTALL_PATH: &str = "~/cudos-test-node";
     pub const CUDOS_HOME: &str = "~/cudos-test-data";
     // todo set tagged version on next cudos-node release, e.g. "v1.2.0"
-    pub const VERSION: &str = "CUDOS-1827-CUDOS-2531-cosmwasm-bindings";
+    pub const VERSION: &str = "cudos-dev-cosmos-v0.47.3";
     pub const CHAIN_ID: &str = "cudos-test-network";
     pub const ALICE: CliKeyringAccount = CliKeyringAccount {
     key: "validator",

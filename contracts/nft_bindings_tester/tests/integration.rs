@@ -10,27 +10,32 @@ use cudos_cosmwasm_test::cudos_noded::CudosNoded;
 use nft_bindings_tester::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use std::path::Path;
 
-const WASM_PATH: &str = "../../artifacts/nft_bindings_tester.wasm";
+const WASM_PATH: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../artifacts/nft_bindings_tester.wasm"
+);
 
 #[test]
 fn bindings_work() {
-    println!("Starting Test Node...");
     let node = CudosNoded::instance();
     let alice = CudosNoded::ALICE;
     let bob = CudosNoded::BOB;
 
-    println!("Uploading contract from {}...", WASM_PATH);
-    let upload_res = node.upload_contract(Path::new(WASM_PATH), alice);
+    let raw_upload_res = node.upload_contract(Path::new(WASM_PATH), alice);
+    raw_upload_res.wait_for_tx_and_assert_success(Some("UploadContract"));
 
-    upload_res.assert_success();
+    let upload_res = node.query_tx_by_hash(&raw_upload_res.txhash);
 
     let code_id = upload_res
         .get_attr("store_code", "code_id")
-        .parse::<u64>()
+        .ok_or_else(|| String::from("Attribute 'code_id' not found in 'store_code' event"))
+        .and_then(|attr| {
+            attr.parse::<u64>()
+                .map_err(|e| format!("Failed to parse code_id: {}", e))
+        })
         .unwrap();
 
-    println!("Instantiating uploaded contract with code id {}.", code_id);
-    let instantiate_res = node.instantiate_contract(
+    let raw_instantiate_res = node.instantiate_contract(
         code_id,
         &InstantiateMsg {},
         "nft-bindings-tester".to_string(),
@@ -38,11 +43,15 @@ fn bindings_work() {
         alice,
     );
 
-    instantiate_res.assert_success();
+    raw_instantiate_res.wait_for_tx_and_assert_success(Some("InstantiateMsg"));
+    let instantiate_res = node.query_tx_by_hash(&raw_instantiate_res.txhash);
 
-    let contract_address = instantiate_res.get_attr("instantiate", "_contract_address");
-    println!("Instantiated. Contract address: {}.", contract_address);
-    println!("Start testing...");
+    let contract_address = instantiate_res
+        .get_attr("instantiate", "_contract_address")
+        .ok_or_else(|| {
+            String::from("Attribute 'contract_address' not found in 'instantiate' event")
+        })
+        .unwrap();
 
     let denom_id = "testdenom";
 
@@ -60,7 +69,7 @@ fn bindings_work() {
         },
         alice,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("IssueDenomMsg"));
 
     let denom_res: DenomResponse = node.wasm_query(
         contract_address.clone(),
@@ -114,7 +123,7 @@ fn bindings_work() {
 
     let mut nft_name = "testnft".to_string();
 
-    let mint_res = node.wasm_execute(
+    let raw_mint_res = node.wasm_execute(
         contract_address.clone(),
         &ExecuteMsg::MintNftMsg {
             denom_id: denom_id.to_string(),
@@ -126,9 +135,14 @@ fn bindings_work() {
         alice,
     );
 
-    mint_res.assert_success();
+    raw_mint_res.wait_for_tx_and_assert_success(Some("MintNftMsg"));
 
-    let token_id = mint_res.get_attr("mint_nft", "token_id");
+    let mint_res = node.query_tx_by_hash(&raw_mint_res.txhash);
+
+    let token_id = mint_res
+        .get_attr("mint_nft", "token_id")
+        .ok_or_else(|| String::from("Attribute 'token_id' not found in 'mint_nft' event"))
+        .unwrap();
 
     node.wasm_execute(
         contract_address.clone(),
@@ -140,7 +154,7 @@ fn bindings_work() {
         },
         alice,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("TransferNftMsg"));
 
     nft_name.push_str(nft_name.clone().as_str());
 
@@ -155,7 +169,7 @@ fn bindings_work() {
         },
         bob,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("EditNftMsg"));
 
     node.wasm_execute(
         contract_address.clone(),
@@ -166,7 +180,7 @@ fn bindings_work() {
         },
         bob,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("ApproveNftMsg"));
 
     let approvals_res: QueryApprovalsResponse = node.wasm_query(
         contract_address.clone(),
@@ -190,7 +204,7 @@ fn bindings_work() {
         },
         bob,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("RevokeApprovalMsg"));
 
     let token_res: QueryNFTResponse = node.wasm_query(
         contract_address.clone(),
@@ -220,7 +234,7 @@ fn bindings_work() {
         },
         alice,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("ApproveAllMsg"));
 
     let all_approvals_res: QueryApprovedForAllResponse = node.wasm_query(
         contract_address.clone(),
@@ -331,7 +345,7 @@ fn bindings_work() {
         },
         bob,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("BurnNftMsg"));
 
     let supply_res: SupplyResponse = node.wasm_query(
         contract_address.clone(),
@@ -350,14 +364,14 @@ fn bindings_work() {
         },
         alice,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("TransferDenomMsg"));
 
     let royalties = vec![Royalty {
         address: alice.address.to_string(),
         percent: "100".to_string(),
     }];
 
-    let publish_collection_res = node.wasm_execute(
+    let raw_publish_collection_res = node.wasm_execute(
         contract_address.clone(),
         &ExecuteMsg::PublishCollectionMsg {
             denom_id: denom_id.to_string(),
@@ -367,11 +381,19 @@ fn bindings_work() {
         bob,
     );
 
-    publish_collection_res.assert_success();
+    raw_publish_collection_res.wait_for_tx_and_assert_success(Some("PublishCollectionMsg"));
+
+    let publish_collection_res = node.query_tx_by_hash(&raw_publish_collection_res.txhash);
 
     let collection_id = publish_collection_res
         .get_attr("publish_collection", "collection_id")
-        .parse::<u64>()
+        .ok_or_else(|| {
+            String::from("Attribute 'collection_id' not found in 'publish_collection' event")
+        })
+        .and_then(|attr| {
+            attr.parse::<u64>()
+                .map_err(|e| format!("Failed to parse collection_id: {}", e))
+        })
         .unwrap();
 
     let all_collections_res: QueryAllCollectionsResponse = node.wasm_query(
@@ -407,7 +429,7 @@ fn bindings_work() {
         },
         alice,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("AddAdminMsg"));
 
     let list_admins_res: QueryListAdminsResponse =
         node.wasm_query(contract_address.clone(), &QueryMsg::QueryListAdmins {});
@@ -419,9 +441,9 @@ fn bindings_work() {
         &ExecuteMsg::VerifyCollectionMsg { id: collection_id },
         bob,
     )
-    .assert_success();
+    .wait_for_tx_and_assert_success(Some("VerifyCollectionMsg"));
 
-    let mint_nft_marketplace_res = node.wasm_execute(
+    let raw_mint_nft_marketplace_res = node.wasm_execute(
         contract_address.clone(),
         &ExecuteMsg::MintNftMarketplaceMsg {
             denom_id: denom_id.to_string(),
@@ -435,11 +457,17 @@ fn bindings_work() {
         bob,
     );
 
-    mint_nft_marketplace_res.assert_success();
+    raw_mint_nft_marketplace_res.wait_for_tx_and_assert_success(Some("MintNftMarketplaceMsg"));
+    let mint_nft_marketplace_res = node.query_tx_by_hash(&raw_mint_nft_marketplace_res.txhash);
 
-    let token_id = mint_nft_marketplace_res.get_attr("marketplace_mint_nft", "token_id");
+    let token_id = mint_nft_marketplace_res
+        .get_attr("marketplace_mint_nft", "token_id")
+        .ok_or_else(|| {
+            String::from("Attribute 'token_id' not found in 'marketplace_mint_nft' event")
+        })
+        .unwrap();
 
-    let publish_nft_res = node.wasm_execute(
+    let raw_publish_nft_res = node.wasm_execute(
         contract_address.clone(),
         &ExecuteMsg::PublishNftMsg {
             token_id: token_id.clone(),
@@ -449,11 +477,16 @@ fn bindings_work() {
         bob,
     );
 
-    publish_nft_res.assert_success();
+    raw_publish_nft_res.wait_for_tx_and_assert_success(Some("PublishNftMsg"));
+    let publish_nft_res = node.query_tx_by_hash(&raw_publish_nft_res.txhash);
 
     let nft_id = publish_nft_res
         .get_attr("publish_nft", "nft_id")
-        .parse::<u64>()
+        .ok_or_else(|| String::from("Attribute 'nft_id' not found in 'publish_nft' event"))
+        .and_then(|attr| {
+            attr.parse::<u64>()
+                .map_err(|e| format!("Failed to parse collection_id: {}", e))
+        })
         .unwrap();
 
     let query_nft_res: QueryNftMarketplaceResponse =

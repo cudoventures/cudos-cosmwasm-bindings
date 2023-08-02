@@ -1,5 +1,8 @@
 use cosmwasm_std::Event;
 use serde::{Deserialize, Serialize};
+use std::io::Write;
+use std::thread::sleep;
+use std::time::Duration;
 
 #[derive(Copy, Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct CliKeyringAccount {
@@ -22,29 +25,33 @@ impl CliTxResponse {
         return self.code == 0;
     }
 
-    pub fn assert_success(&self) {
+    pub fn wait_for_tx_and_assert_success(&self, tx_type: Option<&str>) {
+        if let Some(message) = tx_type {
+            print!("Processing: {}", message);
+        }
         if !self.is_success() {
             panic!(
                 "Tx failed: {}\nCode: {}\n{}",
                 self.txhash, self.code, &self.raw_log
             );
         }
+        // Sleeping for an estimate of a block time creation so we make sure 
+        // a success TX is included in a block and the txhash is able to be queried
+        for _ in 0..7 {
+            print!(".");
+            std::io::stdout().flush().unwrap();
+            sleep(Duration::from_secs(1));
+        }
+        println!("OK!");
     }
 
-    pub fn get_attr(&self, event_type: &str, attribute_key: &str) -> String {
+    pub fn get_attr(&self, event_type: &str, attribute_key: &str) -> Option<String> {
         self.events
             .clone()
             .into_iter()
             .find(|e| e.ty == event_type)
-            .and_then(|e| {
-                e.attributes
-                    .into_iter()
-                    .find(|a| a.key == base64::encode(attribute_key))
-            })
-            .map(|a| {
-                String::from_utf8(base64::decode(a.value).unwrap()).unwrap()
-            })
-            .unwrap()
+            .and_then(|e| e.attributes.into_iter().find(|a| a.key == attribute_key))
+            .map(|a| a.value.clone())
     }
 }
 

@@ -25,4 +25,4 @@ jobs:
         with:
           go-version: 1.19
       - name: Run tests
-        run: RUST_BACKTRACE=1 cargo test
+        run: RUST_BACKTRACE=1 cargo test -- --nocapture

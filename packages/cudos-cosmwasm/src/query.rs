@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use cosmwasm_std::{CustomQuery, Coin};
+use cosmwasm_std::{Coin, CustomQuery};
 
 use crate::msg::Royalty;
 
@@ -113,9 +113,7 @@ pub struct DenomsResponse {
     pub pagination: Option<PageResponse>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct Denom {
     pub id: String,
     pub name: String,
@@ -128,17 +126,13 @@ pub struct Denom {
     pub data: Option<String>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct CollectionResponse {
     pub collection: Option<Collection>,
     pub pagination: Option<PageResponse>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct CollectionsResponse {
     pub collections: Option<Vec<Collection>>,
 }
@@ -173,17 +167,13 @@ pub struct PageResponse {
     pub total: Option<u64>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct Collection {
     pub denom: Denom,
     pub nfts: Option<Vec<NFT>>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct NFT {
     pub id: String,
     pub name: Option<String>,
@@ -193,66 +183,50 @@ pub struct NFT {
     pub approved_addresses: Option<Vec<String>>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryNFTResponse {
     pub nft: NFT,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryCollectionMarketplaceResponse {
     #[serde(alias = "Collection")]
-    pub collection: MarketplaceCollection
+    pub collection: MarketplaceCollection,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryAllCollectionsResponse {
     #[serde(alias = "Collection")]
     pub collections: Vec<MarketplaceCollection>,
     pub pagination: Option<PageResponse>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryCollectionByDenomIdResponse {
     #[serde(alias = "Collection")]
-    pub collection: MarketplaceCollection
+    pub collection: MarketplaceCollection,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryNftMarketplaceResponse {
     #[serde(alias = "Nft")]
     pub nft: MarketplaceNft,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryAllNftsResponse {
-    #[serde(alias = "Nft")]
+    #[serde(alias = "Nft", default = "empty_marketplace_nft_array")]
     pub nfts: Vec<MarketplaceNft>,
     pub pagination: Option<PageResponse>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryListAdminsResponse {
-    #[serde(alias = "Admins")]
+    #[serde(alias = "Admins", default = "empty_string_array")]
     pub admins: Vec<String>,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct MarketplaceCollection {
     pub id: u64,
     #[serde(alias = "denomId")]
@@ -265,9 +239,7 @@ pub struct MarketplaceCollection {
     pub owner: String,
 }
 
-#[derive(
-    Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema,
-)]
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct MarketplaceNft {
     pub id: u64,
     #[serde(alias = "tokenId")]
@@ -276,4 +248,12 @@ pub struct MarketplaceNft {
     pub denom_id: String,
     pub price: Coin,
     pub owner: String,
+}
+
+fn empty_string_array() -> Vec<String> {
+    Vec::new()
+}
+
+fn empty_marketplace_nft_array() -> Vec<MarketplaceNft> {
+    Vec::new()
 }

@@ -57,6 +57,14 @@ pub enum CudosQuery {
     QueryAllCollections {
         pagination: Option<PaginationRequest>,
     },
+    QueryAllAddresses {
+        pagination: Option<PaginationRequest>,
+    },
+    QueryAddress {
+        creator: String,
+        network: String,
+        label: String,
+    },
     QueryCollectionByDenomId {
         denom_id: String,
     },
@@ -202,6 +210,17 @@ pub struct QueryAllCollectionsResponse {
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
+pub struct QueryAllAdressesResponse {
+    pub address: Vec<AddressbookAddress>,
+    pub pagination: Option<PageResponse>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
+pub struct QueryAdressResponse {
+    pub address: AddressbookAddress,
+}
+
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
 pub struct QueryCollectionByDenomIdResponse {
     #[serde(alias = "Collection")]
     pub collection: MarketplaceCollection,
@@ -237,6 +256,14 @@ pub struct MarketplaceCollection {
     pub resale_royalties: Vec<Royalty>,
     pub verified: bool,
     pub owner: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]
+pub struct AddressbookAddress {
+    pub network: String,
+    pub label: String,
+    pub value: String,
+    pub creator: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, JsonSchema)]

@@ -1,18 +1,19 @@
+use bindings_tester::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use cosmwasm_std::Coin;
 use cudos_cosmwasm::{
     CollectionResponse, CollectionsResponse, Denom, DenomResponse, DenomsResponse, MarketplaceNft,
-    OwnerCollectionResponse, QueryAllCollectionsResponse, QueryAllNftsResponse,
-    QueryApprovalsResponse, QueryApprovedForAllResponse, QueryCollectionByDenomIdResponse,
+    OwnerCollectionResponse, QueryAdressResponse, QueryAllAdressesResponse,
+    QueryAllCollectionsResponse, QueryAllNftsResponse, QueryApprovalsResponse,
+    QueryApprovedForAllResponse, QueryCollectionByDenomIdResponse,
     QueryCollectionMarketplaceResponse, QueryListAdminsResponse, QueryNFTResponse,
     QueryNftMarketplaceResponse, Royalty, SupplyResponse, NFT,
 };
 use cudos_cosmwasm_test::cudos_noded::CudosNoded;
-use nft_bindings_tester::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use std::path::Path;
 
 const WASM_PATH: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
-    "/../../artifacts/nft_bindings_tester.wasm"
+    "/../../artifacts/bindings_tester.wasm"
 );
 
 #[test]
@@ -38,7 +39,7 @@ fn bindings_work() {
     let raw_instantiate_res = node.instantiate_contract(
         code_id,
         &InstantiateMsg {},
-        "nft-bindings-tester".to_string(),
+        "bindings-tester".to_string(),
         Some(alice.address.to_string()),
         alice,
     );
@@ -509,4 +510,100 @@ fn bindings_work() {
     );
 
     assert_eq!(all_nfts_res.nfts.len(), 1);
+
+    // ADDRESSBOOK
+    let network = "network".to_string();
+    let label = "label".to_string();
+    let value = "value".to_string();
+    let updated_value = "updated_value".to_string();
+
+    // TEST Create new addressbook
+    let create_address_msg = &ExecuteMsg::CreateAddressMsg {
+        network: network.clone(),
+        label: label.clone(),
+        value: value.clone(),
+    };
+    let raw_create_addressbook_address_res =
+        node.wasm_execute(contract_address.clone(), create_address_msg, bob);
+    raw_create_addressbook_address_res.wait_for_tx_and_assert_success(Some("CreateAddressMsg"));
+
+    // TEST Addressbook Queries
+    if let ExecuteMsg::CreateAddressMsg {
+        network,
+        label,
+        value,
+    } = &create_address_msg
+    {
+        // TEST Single address query
+        let single_address_query_res: QueryAdressResponse = node.wasm_query(
+            contract_address.clone(),
+            &QueryMsg::QueryAddress {
+                creator: bob.address.to_string(),
+                network: network.to_string(),
+                label: label.to_string(),
+            },
+        );
+        let mut created_address = single_address_query_res.address.clone();
+        assert_eq!(created_address.network, *network);
+        assert_eq!(created_address.label, *label);
+        assert_eq!(created_address.value, *value);
+        assert_eq!(created_address.creator, bob.address);
+
+        // TEST All-addresses query
+        let all_addresses_res: QueryAllAdressesResponse = node.wasm_query(
+            contract_address.clone(),
+            &QueryMsg::QueryAllAddresses { pagination: None },
+        );
+        assert_eq!(all_addresses_res.address.len(), 1);
+        created_address = all_addresses_res.address[0].clone();
+        assert_eq!(created_address.network, *network);
+        assert_eq!(created_address.label, *label);
+        assert_eq!(created_address.value, *value);
+        assert_eq!(created_address.creator, bob.address);
+    }
+
+    // TEST Update addressbook
+    let update_address_msg = &ExecuteMsg::UpdateAddressMsg {
+        network: network.clone(),
+        label: label.clone(),
+        value: updated_value.clone(),
+    };
+    let raw_updated_addressbook_address_res =
+        node.wasm_execute(contract_address.clone(), update_address_msg, bob);
+    raw_updated_addressbook_address_res.wait_for_tx_and_assert_success(Some("UpdateAddressMsg"));
+
+    // ASSERT UPDATED ADDRESS CHANGED VALUES
+    if let ExecuteMsg::UpdateAddressMsg {
+        network,
+        label,
+        value,
+    } = &update_address_msg
+    {
+        let all_addresses_res: QueryAllAdressesResponse = node.wasm_query(
+            contract_address.clone(),
+            &QueryMsg::QueryAllAddresses { pagination: None },
+        );
+        assert_eq!(all_addresses_res.address.len(), 1);
+        let updated_address = all_addresses_res.address[0].clone();
+        assert_eq!(updated_address.network, *network);
+        assert_eq!(updated_address.label, *label);
+        assert_eq!(updated_address.value, *value);
+        assert_eq!(updated_address.creator, bob.address);
+    }
+
+    // TEST Delete addressbook
+    let delete_address_msg = &ExecuteMsg::DeleteAddressMsg {
+        network: network.clone(),
+        label: label.clone(),
+    };
+    let raw_delete_addressbook_address_res =
+        node.wasm_execute(contract_address.clone(), delete_address_msg, bob);
+    raw_delete_addressbook_address_res.wait_for_tx_and_assert_success(Some("DeleteAddressMsg"));
+
+    //ASSERT EMPTY ADDRESSBOOK AFTER SINGLE RECORD DELETION
+    let all_addresses_res: QueryAllAdressesResponse = node.wasm_query(
+        contract_address.clone(),
+        &QueryMsg::QueryAllAddresses { pagination: None },
+    );
+    assert_eq!(all_addresses_res.address.len(), 0);
 }

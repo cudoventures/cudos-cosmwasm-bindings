@@ -91,6 +91,23 @@ pub enum CudosMsg {
         mint_royalties: Vec<Royalty>,
         resale_royalties: Vec<Royalty>,
     },
+    CreateAddressMsg {
+        creator: String,
+        network: String,
+        label: String,
+        value: String,
+    },
+    UpdateAddressMsg {
+        creator: String,
+        network: String,
+        label: String,
+        value: String,
+    },
+    DeleteAddressMsg {
+        creator: String,
+        network: String,
+        label: String,
+    },
     PublishNftMsg {
         creator: String,
         token_id: String,

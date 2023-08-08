@@ -1,19 +1,18 @@
 use cosmwasm_std::{
-    entry_point, to_binary, Deps, DepsMut, Env, MessageInfo,
-    QueryResponse, Response, StdError, StdResult, Coin,
+    entry_point, to_binary, Coin, Deps, DepsMut, Env, MessageInfo, QueryResponse, Response,
+    StdError, StdResult,
 };
 
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use cudos_cosmwasm::{
-    create_approve_all_msg, create_approve_nft_msg, create_burn_nft_msg,
-    create_edit_nft_msg, create_issue_denom_msg, create_mint_nft_msg,
-    create_revoke_msg, create_transfer_denom_msg, create_transfer_nft_msg,
-    CollectionResponse, CollectionsResponse, CudosMsg, CudosQuerier,
-    CudosQuery, DenomResponse, DenomsResponse, OwnerCollectionResponse,
-    PaginationRequest, QueryAllCollectionsResponse, QueryAllNftsResponse,
-    QueryApprovalsResponse, QueryApprovedForAllResponse,
-    QueryCollectionByDenomIdResponse, QueryCollectionMarketplaceResponse,
-    QueryListAdminsResponse, QueryNFTResponse, QueryNftMarketplaceResponse, SupplyResponse,Royalty
+    create_approve_all_msg, create_approve_nft_msg, create_burn_nft_msg, create_edit_nft_msg,
+    create_issue_denom_msg, create_mint_nft_msg, create_revoke_msg, create_transfer_denom_msg,
+    create_transfer_nft_msg, CollectionResponse, CollectionsResponse, CudosMsg, CudosQuerier,
+    CudosQuery, DenomResponse, DenomsResponse, OwnerCollectionResponse, PaginationRequest,
+    QueryAdressResponse, QueryAllAdressesResponse, QueryAllCollectionsResponse,
+    QueryAllNftsResponse, QueryApprovalsResponse, QueryApprovedForAllResponse,
+    QueryCollectionByDenomIdResponse, QueryCollectionMarketplaceResponse, QueryListAdminsResponse,
+    QueryNFTResponse, QueryNftMarketplaceResponse, Royalty, SupplyResponse,
 };
 
 #[entry_point]
@@ -62,26 +61,20 @@ pub fn execute(
             uri,
             data,
             recipient,
-        } => execute_msg_mint_nft(
-            deps, env, info, denom_id, name, uri, data, recipient,
-        ),
+        } => execute_msg_mint_nft(deps, env, info, denom_id, name, uri, data, recipient),
         ExecuteMsg::EditNftMsg {
             denom_id,
             token_id,
             name,
             uri,
             data,
-        } => execute_msg_edit_nft(
-            deps, env, info, denom_id, token_id, name, uri, data,
-        ),
+        } => execute_msg_edit_nft(deps, env, info, denom_id, token_id, name, uri, data),
         ExecuteMsg::TransferNftMsg {
             denom_id,
             token_id,
             from,
             to,
-        } => execute_msg_transfer_nft(
-            deps, env, info, denom_id, token_id, from, to,
-        ),
+        } => execute_msg_transfer_nft(deps, env, info, denom_id, token_id, from, to),
         ExecuteMsg::TransferDenomMsg { denom_id, to } => {
             execute_msg_transfer_denom(deps, env, info, denom_id, to)
         }
@@ -92,36 +85,16 @@ pub fn execute(
             denom_id,
             token_id,
             approved_address,
-        } => execute_msg_approve_nft(
-            deps,
-            env,
-            info,
-            denom_id,
-            token_id,
-            approved_address,
-        ),
+        } => execute_msg_approve_nft(deps, env, info, denom_id, token_id, approved_address),
         ExecuteMsg::ApproveAllMsg {
             approved_operator,
             approved,
-        } => execute_msg_approve_all(
-            deps,
-            env,
-            info,
-            approved_operator,
-            approved,
-        ),
+        } => execute_msg_approve_all(deps, env, info, approved_operator, approved),
         ExecuteMsg::RevokeApprovalMsg {
             denom_id,
             token_id,
             address_to_revoke,
-        } => execute_msg_revoke_nft(
-            deps,
-            env,
-            info,
-            denom_id,
-            token_id,
-            address_to_revoke,
-        ),
+        } => execute_msg_revoke_nft(deps, env, info, denom_id, token_id, address_to_revoke),
         ExecuteMsg::PublishCollectionMsg {
             denom_id,
             mint_royalties,
@@ -134,16 +107,25 @@ pub fn execute(
             mint_royalties,
             resale_royalties,
         ),
+        ExecuteMsg::CreateAddressMsg {
+            network,
+            label,
+            value,
+        } => execute_msg_create_addressbook_address(deps, env, info, network, label, value),
+        ExecuteMsg::UpdateAddressMsg {
+            network,
+            label,
+            value,
+        } => execute_msg_update_addressbook_address(deps, env, info, network, label, value),
+        ExecuteMsg::DeleteAddressMsg { network, label } => {
+            execute_msg_delete_addressbook_address(deps, env, info, network, label)
+        }
         ExecuteMsg::PublishNftMsg {
             token_id,
             denom_id,
             price,
-        } => {
-            execute_msg_publish_nft(deps, env, info, token_id, denom_id, price)
-        }
-        ExecuteMsg::BuyNftMsg { id } => {
-            execute_msg_buy_nft(deps, env, info, id)
-        }
+        } => execute_msg_publish_nft(deps, env, info, token_id, denom_id, price),
+        ExecuteMsg::BuyNftMsg { id } => execute_msg_buy_nft(deps, env, info, id),
         ExecuteMsg::MintNftMarketplaceMsg {
             denom_id,
             recipient,
@@ -155,9 +137,7 @@ pub fn execute(
         } => execute_msg_mint_marketplace_nft(
             deps, env, info, denom_id, recipient, price, name, uri, data, uid,
         ),
-        ExecuteMsg::RemoveNftMsg { id } => {
-            execute_msg_remove_nft(deps, env, info, id)
-        }
+        ExecuteMsg::RemoveNftMsg { id } => execute_msg_remove_nft(deps, env, info, id),
         ExecuteMsg::VerifyCollectionMsg { id } => {
             execute_msg_verify_collection(deps, env, info, id)
         }
@@ -196,20 +176,11 @@ pub fn execute(
             id,
             mint_royalties,
             resale_royalties,
-        } => execute_msg_update_royalties(
-            deps,
-            env,
-            info,
-            id,
-            mint_royalties,
-            resale_royalties,
-        ),
+        } => execute_msg_update_royalties(deps, env, info, id, mint_royalties, resale_royalties),
         ExecuteMsg::UpdatePriceMsg { id, price } => {
             execute_msg_update_price(deps, env, info, id, price)
         }
-        ExecuteMsg::AddAdminMsg { address } => {
-            execute_msg_add_admin(deps, env, info, address)
-        }
+        ExecuteMsg::AddAdminMsg { address } => execute_msg_add_admin(deps, env, info, address),
         ExecuteMsg::RemoveAdminMsg { address } => {
             execute_msg_remove_admin(deps, env, info, address)
         }
@@ -419,6 +390,55 @@ fn execute_msg_publish_collection(
     Ok(Response::new().add_message(msg))
 }
 
+fn execute_msg_create_addressbook_address(
+    _deps: DepsMut<CudosQuery>,
+    _env: Env,
+    info: MessageInfo,
+    network: String,
+    label: String,
+    value: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = CudosMsg::CreateAddressMsg {
+        creator: info.sender.to_string(),
+        network,
+        label,
+        value,
+    };
+    Ok(Response::new().add_message(msg))
+}
+
+fn execute_msg_update_addressbook_address(
+    _deps: DepsMut<CudosQuery>,
+    _env: Env,
+    info: MessageInfo,
+    network: String,
+    label: String,
+    value: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = CudosMsg::UpdateAddressMsg {
+        creator: info.sender.to_string(),
+        network,
+        label,
+        value,
+    };
+    Ok(Response::new().add_message(msg))
+}
+
+fn execute_msg_delete_addressbook_address(
+    _deps: DepsMut<CudosQuery>,
+    _env: Env,
+    info: MessageInfo,
+    network: String,
+    label: String,
+) -> StdResult<Response<CudosMsg>> {
+    let msg = CudosMsg::DeleteAddressMsg {
+        creator: info.sender.to_string(),
+        network,
+        label,
+    };
+    Ok(Response::new().add_message(msg))
+}
+
 fn execute_msg_publish_nft(
     _deps: DepsMut<CudosQuery>,
     _env: Env,
@@ -616,24 +636,16 @@ fn execute_msg_remove_admin(
 }
 
 #[entry_point]
-pub fn query(
-    deps: Deps<CudosQuery>,
-    _env: Env,
-    msg: QueryMsg,
-) -> StdResult<QueryResponse> {
+pub fn query(deps: Deps<CudosQuery>, _env: Env, msg: QueryMsg) -> StdResult<QueryResponse> {
     match msg {
-        QueryMsg::QueryDenomById { denom_id } => {
-            to_binary(&query_denom_by_id(deps, denom_id)?)
-        }
+        QueryMsg::QueryDenomById { denom_id } => to_binary(&query_denom_by_id(deps, denom_id)?),
         QueryMsg::QueryDenomByName { denom_name } => {
             to_binary(&query_denom_by_name(deps, denom_name)?)
         }
         QueryMsg::QueryDenomBySymbol { denom_symbol } => {
             to_binary(&query_denom_by_symbol(deps, denom_symbol)?)
         }
-        QueryMsg::QueryDenoms { pagination } => {
-            to_binary(&query_denoms(deps, pagination)?)
-        }
+        QueryMsg::QueryDenoms { pagination } => to_binary(&query_denoms(deps, pagination)?),
         QueryMsg::QueryCollection {
             denom_id,
             pagination,
@@ -641,9 +653,7 @@ pub fn query(
         QueryMsg::QueryCollectionsByDenomIds { denom_ids } => {
             to_binary(&query_collections_by_denom_ids(deps, denom_ids)?)
         }
-        QueryMsg::QuerySupply { denom_id } => {
-            to_binary(&query_supply(deps, denom_id)?)
-        }
+        QueryMsg::QuerySupply { denom_id } => to_binary(&query_supply(deps, denom_id)?),
         QueryMsg::QueryOwner {
             denom_id,
             address,
@@ -669,31 +679,31 @@ pub fn query(
         QueryMsg::QueryAllCollections { pagination } => {
             to_binary(&query_all_collections(deps, pagination)?)
         }
+        QueryMsg::QueryAllAddresses { pagination } => {
+            to_binary(&query_all_addresses(deps, pagination)?)
+        }
+        QueryMsg::QueryAddress {
+            creator,
+            network,
+            label,
+        } => to_binary(&query_address(deps, creator, network, label)?),
         QueryMsg::QueryCollectionByDenomId { denom_id } => {
             to_binary(&query_collection_by_denom_id(deps, denom_id)?)
         }
         QueryMsg::QueryNft { id } => to_binary(&query_nft(deps, id)?),
-        QueryMsg::QueryAllNfts { pagination } => {
-            to_binary(&query_all_nfts(deps, pagination)?)
-        }
+        QueryMsg::QueryAllNfts { pagination } => to_binary(&query_all_nfts(deps, pagination)?),
         QueryMsg::QueryListAdmins {} => to_binary(&query_list_admins(deps)?),
     }
 }
 
-pub fn query_denom_by_id(
-    deps: Deps<CudosQuery>,
-    denom_id: String,
-) -> StdResult<DenomResponse> {
+pub fn query_denom_by_id(deps: Deps<CudosQuery>, denom_id: String) -> StdResult<DenomResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: DenomResponse = querier.query_denom_by_id(denom_id)?;
 
     Ok(res)
 }
 
-pub fn query_denom_by_name(
-    deps: Deps<CudosQuery>,
-    denom_name: String,
-) -> StdResult<DenomResponse> {
+pub fn query_denom_by_name(deps: Deps<CudosQuery>, denom_name: String) -> StdResult<DenomResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: DenomResponse = querier.query_denom_by_name(denom_name)?;
 
@@ -726,8 +736,7 @@ pub fn query_collection(
     pagination: Option<PaginationRequest>,
 ) -> StdResult<CollectionResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: CollectionResponse =
-        querier.query_collection(denom_id, pagination)?;
+    let res: CollectionResponse = querier.query_collection(denom_id, pagination)?;
 
     Ok(res)
 }
@@ -737,16 +746,12 @@ pub fn query_collections_by_denom_ids(
     denom_ids: Vec<String>,
 ) -> StdResult<CollectionsResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: CollectionsResponse =
-        querier.query_collections_by_denom_ids(denom_ids)?;
+    let res: CollectionsResponse = querier.query_collections_by_denom_ids(denom_ids)?;
 
     Ok(res)
 }
 
-pub fn query_supply(
-    deps: Deps<CudosQuery>,
-    denom_id: String,
-) -> StdResult<SupplyResponse> {
+pub fn query_supply(deps: Deps<CudosQuery>, denom_id: String) -> StdResult<SupplyResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: SupplyResponse = querier.query_supply(denom_id)?;
 
@@ -760,8 +765,7 @@ pub fn query_owner(
     pagination: Option<PaginationRequest>,
 ) -> StdResult<OwnerCollectionResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: OwnerCollectionResponse =
-        querier.query_owner(denom_id, address, pagination)?;
+    let res: OwnerCollectionResponse = querier.query_owner(denom_id, address, pagination)?;
 
     Ok(res)
 }
@@ -782,8 +786,7 @@ pub fn query_approvals(
     token_id: String,
 ) -> StdResult<QueryApprovalsResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: QueryApprovalsResponse =
-        querier.query_approvals(denom_id, token_id)?;
+    let res: QueryApprovalsResponse = querier.query_approvals(denom_id, token_id)?;
     Ok(res)
 }
 
@@ -803,8 +806,7 @@ pub fn query_collection_marketplace(
     id: u64,
 ) -> StdResult<QueryCollectionMarketplaceResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: QueryCollectionMarketplaceResponse =
-        querier.query_collection_marketplace(id)?;
+    let res: QueryCollectionMarketplaceResponse = querier.query_collection_marketplace(id)?;
     Ok(res)
 }
 
@@ -813,8 +815,27 @@ pub fn query_all_collections(
     pagination: Option<PaginationRequest>,
 ) -> StdResult<QueryAllCollectionsResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: QueryAllCollectionsResponse =
-        querier.query_all_collections(pagination)?;
+    let res: QueryAllCollectionsResponse = querier.query_all_collections(pagination)?;
+    Ok(res)
+}
+
+pub fn query_all_addresses(
+    deps: Deps<CudosQuery>,
+    pagination: Option<PaginationRequest>,
+) -> StdResult<QueryAllAdressesResponse> {
+    let querier = CudosQuerier::new(&deps.querier);
+    let res: QueryAllAdressesResponse = querier.query_all_addresses(pagination)?;
+    Ok(res)
+}
+
+pub fn query_address(
+    deps: Deps<CudosQuery>,
+    creator: String,
+    network: String,
+    label: String,
+) -> StdResult<QueryAdressResponse> {
+    let querier = CudosQuerier::new(&deps.querier);
+    let res: QueryAdressResponse = querier.query_address(creator, network, label)?;
     Ok(res)
 }
 
@@ -823,15 +844,11 @@ pub fn query_collection_by_denom_id(
     denom_id: String,
 ) -> StdResult<QueryCollectionByDenomIdResponse> {
     let querier = CudosQuerier::new(&deps.querier);
-    let res: QueryCollectionByDenomIdResponse =
-        querier.query_collection_by_denom_id(denom_id)?;
+    let res: QueryCollectionByDenomIdResponse = querier.query_collection_by_denom_id(denom_id)?;
     Ok(res)
 }
 
-pub fn query_nft(
-    deps: Deps<CudosQuery>,
-    id: u64,
-) -> StdResult<QueryNftMarketplaceResponse> {
+pub fn query_nft(deps: Deps<CudosQuery>, id: u64) -> StdResult<QueryNftMarketplaceResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: QueryNftMarketplaceResponse = querier.query_nft(id)?;
     Ok(res)
@@ -846,9 +863,7 @@ pub fn query_all_nfts(
     Ok(res)
 }
 
-pub fn query_list_admins(
-    deps: Deps<CudosQuery>,
-) -> StdResult<QueryListAdminsResponse> {
+pub fn query_list_admins(deps: Deps<CudosQuery>) -> StdResult<QueryListAdminsResponse> {
     let querier = CudosQuerier::new(&deps.querier);
     let res: QueryListAdminsResponse = querier.query_list_admins()?;
     Ok(res)

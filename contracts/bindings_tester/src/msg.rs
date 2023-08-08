@@ -67,6 +67,20 @@ pub enum ExecuteMsg {
         mint_royalties: Vec<Royalty>,
         resale_royalties: Vec<Royalty>,
     },
+    CreateAddressMsg {
+        network: String,
+        label: String,
+        value: String,
+    },
+    UpdateAddressMsg {
+        network: String,
+        label: String,
+        value: String,
+    },
+    DeleteAddressMsg {
+        network: String,
+        label: String,
+    },
     PublishNftMsg {
         token_id: String,
         denom_id: String,
@@ -170,6 +184,14 @@ pub enum QueryMsg {
     },
     QueryAllCollections {
         pagination: Option<PaginationRequest>,
+    },
+    QueryAllAddresses {
+        pagination: Option<PaginationRequest>,
+    },
+    QueryAddress {
+        creator: String,
+        network: String,
+        label: String,
     },
     QueryCollectionByDenomId {
         denom_id: String,

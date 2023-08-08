@@ -1,5 +1,5 @@
 [package]
-name = "nft-bindings-tester"
+name = "bindings-tester"
 version = "0.0.1"
 authors = ["Lyubomir Yonchev <lyubomir.yonchev@limechain.tech>"]
 edition = "2018"
@@ -10,7 +10,7 @@ homepage = "https://www.cudos.org/"
 documentation = "https://docs.cudos.org/"
 readme = "README.md"
 [[example]]
-name = "schema_nft_bindings_tester"
+name = "schema_bindings_tester"
 path = "examples/schema.rs"
 
 

@@ -8,8 +8,17 @@ use cosmwasm_std::{
     QueryResponse, Response, StakingMsg, StdError, StdResult, ValidatorResponse, VoteOption,
 };
 
-use crate::msg::{ExecuteBurnMsg, ExecuteMsg, InstantiateMsg};
+use crate::msg::{ExecuteBurnMsg, ExecuteMsg, InstantiateMsg, MigrateMsg};
 use crate::query::QueryMsg;
+
+#[entry_point]
+pub fn migrate(
+    _deps: DepsMut, 
+    _env: Env, 
+    _msg: MigrateMsg
+) -> Result<Response, StdError> {
+    Ok(Response::new())
+}
 
 #[entry_point]
 pub fn instantiate(

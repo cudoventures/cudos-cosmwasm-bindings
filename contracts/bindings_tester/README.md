@@ -8,7 +8,7 @@ You will need Rust 1.59+ with `wasm32-unknown-unknown` target installed.
 
 You can run unit tests on this via: 
 
-`cargo test`
+`cargo test -- --nocapture`
 
 Once you are happy with the content, you can compile it to wasm via:
 
@@ -26,7 +26,7 @@ repository root:
 docker run --rm -v "$(pwd)":/code \
   --mount type=volume,source="cudos_cosmwasm_cache",target=/code/target \
   --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
-  cosmwasm/workspace-optimizer:0.12.6
+  cosmwasm/workspace-optimizer:0.14.0
 ```
 
 The optimized contracts are generated in the `artifacts/` directory.

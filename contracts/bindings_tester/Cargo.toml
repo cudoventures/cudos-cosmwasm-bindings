@@ -1,5 +1,5 @@
 [package]
-name = "nft-bindings-tester"
+name = "bindings-tester"
 version = "0.0.1"
 authors = ["Lyubomir Yonchev <lyubomir.yonchev@limechain.tech>"]
 edition = "2018"
@@ -9,6 +9,9 @@ repository = "https://github.com/CudoVentures/cudos-cosmwasm-bindings"
 homepage = "https://www.cudos.org/"
 documentation = "https://docs.cudos.org/"
 readme = "README.md"
+[[example]]
+name = "schema_bindings_tester"
+path = "examples/schema.rs"
 
 
 [lib]
@@ -19,14 +22,15 @@ backtraces = ["cosmwasm-std/backtraces"]
 library = []
 
 [dependencies]
-cudos-cosmwasm = { version = "0.0.7" }
-cosmwasm-std = { version = "1.0.0-beta" }
-cosmwasm-storage = { version = "1.0.0-beta" }
-schemars = "0.8.1"
+cudos-cosmwasm = { version = "0.0.7", path = "../../packages/cudos-cosmwasm" }
+cosmwasm-std = { version = "=1.2.7" }
+cosmwasm-storage = { version = "=1.2.7" }
+schemars = "=0.8.3"
 serde = { version = "1.0.103", default-features = false, features = ["derive"] }
 snafu = { version = "0.6.3" }
 thiserror = "1.0"
 
 [dev-dependencies]
 # we only need to enable this if we use integration tests
-cosmwasm-schema = { version = "1.0.0-beta" }
+cosmwasm-schema = { version = "=1.2.7" }
+cudos-cosmwasm-test = { version = "0.0.1", path = "../../packages/cudos-cosmwasm-test" }

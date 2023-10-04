@@ -16,3 +16,5 @@ artifacts/
 # Auto-gen
 .cargo-ok
 cudos-data/
+cudos-test-data/
+cudos-test-node/
